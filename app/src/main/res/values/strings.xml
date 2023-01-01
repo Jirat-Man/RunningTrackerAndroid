@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">RunningTracker_Manpadungkit</string>
+    <string name="google_map_key">AIzaSyBW61Zj45D_QJGtwNPxrYEoPfin-nMtfW0</string>
+    <string name="distance">Distance:</string>
+    <string name="duration">Duration:</string>
+    <string name="calories">Calories:</string>
+    <string name="altitude">Altitude:</string>
+    <string name="speed">Speed:</string>
+    <string name="speedInt">0</string>
+    <string name="not_available">Not Available</string>
+    <string name="record">Press to start tracking</string>
+    <string name="analytics">Analytics</string>
+</resources>
