@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.location.Location;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -26,7 +25,7 @@ import 	android.os.Build;
 import com.example.runningtracker_manpadungkit.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.util.Objects;
+import java.util.*;
 
 public class RecordRunActivity extends AppCompatActivity {
 
@@ -39,8 +38,16 @@ public class RecordRunActivity extends AppCompatActivity {
     private TextView mAltitudeTextView;
     private TextView mSpeedTextView;
 
+    Timer timer;
+    TimerTask timerTask;
+    double time = 0.0;
+
     private ImageButton mPauseButton;
     private ImageButton mStopButton;
+
+    int second = 0;
+    int minute = 0;
+    int hour = 0;
 
     //Google's API for location service
     private FusedLocationProviderClient fusedLocationClient;
@@ -59,6 +66,8 @@ public class RecordRunActivity extends AppCompatActivity {
 
         widgetInit();
 
+        startTimer();
+
         LocationRequest locationRequest = new
                 LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).build();
 
@@ -75,6 +84,44 @@ public class RecordRunActivity extends AppCompatActivity {
         };
         updateLocation();
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+    }
+
+    private void startTimer() {
+        timer = new Timer();
+        timerTask = new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        time++;
+                        mDistanceTextView.setText(String.valueOf(getTimerText()));
+                    }
+                });
+            }
+
+        };
+        timer.scheduleAtFixedRate(timerTask, 0 ,1000);
+    }
+
+    private String getTimerText()
+    {
+        int rounded = (int) Math.round(time);
+
+        int seconds = ((rounded % 86400) % 3600) % 60;
+        int minutes = ((rounded % 86400) % 3600) / 60;
+        int hours = ((rounded % 86400) / 3600);
+
+        return formatTime(seconds, minutes, hours);
+    }
+
+    private String formatTime(int seconds, int minutes, int hours)
+    {
+        return String.format("%02d",hours) + " : " + String.format("%02d",minutes) + " : " + String.format("%02d",seconds);
     }
 
     //Check if Location permission is granted
@@ -100,10 +147,10 @@ public class RecordRunActivity extends AppCompatActivity {
         mCaloriesTextView = findViewById(R.id.calories);
         mAltitudeTextView = findViewById(R.id.altitute);
         mSpeedTextView = findViewById(R.id.speed);
-
-
+        
         mPauseButton = findViewById(R.id.pauseButton);
         mStopButton = findViewById(R.id.stopButton);
+
     }
 
     private void updateLocation() {
@@ -129,9 +176,10 @@ public class RecordRunActivity extends AppCompatActivity {
 
     private void updateUI(Location location) {
         //Update all the textView with new location
-        mDistanceTextView.setText(String.valueOf(location.getLatitude()));
-        mDurationTextView.setText(String.valueOf(location.getLongitude()));
-        mCaloriesTextView.setText(String.valueOf(location.getAccuracy()));
+        if (location != null) {
+            mDurationTextView.setText(String.valueOf(location.getLongitude()));
+            mDistanceTextView.setText(String.valueOf(location.getLatitude()));
+        }
 
         //check if phone has altitude checker function
         if(location.hasAltitude()){
@@ -150,5 +198,20 @@ public class RecordRunActivity extends AppCompatActivity {
             mSpeedTextView.setText(R.string.not_available);
         }
 
+    }
+
+    private String setTimer() {
+        second += 1;
+        if(second == 60){
+            second = 0;
+            minute += 1;
+        }
+        if(minute == 60){
+            minute = 0;
+            hour += 1;
+        }
+        String result = String.valueOf(hour)+ " h "+String.valueOf(minute)+" m "+String.valueOf(second) + " s";
+
+        return result;
     }
 }

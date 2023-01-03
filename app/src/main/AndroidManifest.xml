@@ -18,7 +18,7 @@
         android:theme="@style/Theme.RunningTracker_Manpadungkit"
         tools:targetApi="31">
         <activity
-            android:name=".Analytics"
+            android:name=".Ui.AnalyticsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
