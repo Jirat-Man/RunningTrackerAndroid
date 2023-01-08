@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {RunEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {RunEntity.class}, version = 2, exportSchema = false)
 @TypeConverters({BitmapStringConverter.class})// This will convert Bitmap to String and vice-versa
 
 public abstract class RunRoomDatabase extends RoomDatabase {

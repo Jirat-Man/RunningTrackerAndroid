@@ -10,4 +10,14 @@
     <string name="not_available">Not Available</string>
     <string name="record">Press to start tracking</string>
     <string name="analytics">Analytics</string>
+    <string name="pause_tracking">pauseTracking</string>
+    <string name="stop_tracking">stopTracking</string>
+    <string name="confirm_dialog_message">Click confirm to end your run</string>
+    <string name="confirm_dialog_title">Stop running?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="date">Date</string>
+    <string name="rating">Rating: </string>
+    <string name="comment">Comment: </string>
+    <string name="no_comment">No Comment</string>
 </resources>

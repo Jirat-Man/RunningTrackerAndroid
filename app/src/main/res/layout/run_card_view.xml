@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/runDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/duration"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/runDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/runDuration"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/distance"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/runDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/runDistance"
+            android:text="@string/date"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/runSpeed"/>
+
+        <TextView
+            android:id="@+id/runSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/runDuration"
+            android:layout_alignParentEnd="true"
+            android:text="@string/speed" />
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/runDate"
+            android:layout_alignParentStart="true"
+            android:text="@string/rating" />
+
+        <TextView
+            android:id="@+id/runRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/runDate"
+            android:layout_alignParentEnd="true"
+            android:text="@string/speedInt"
+            android:layout_toEndOf="@id/rating"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rating"
+            android:layout_alignParentStart="true"
+            android:text="@string/comment" />
+
+        <TextView
+            android:id="@+id/runComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/runRating"
+            android:layout_alignParentEnd="true"
+            android:text="@string/no_comment"
+            android:layout_toEndOf="@id/comment"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

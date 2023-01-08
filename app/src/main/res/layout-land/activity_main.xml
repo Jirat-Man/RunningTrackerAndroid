@@ -9,8 +9,8 @@
 
     <ImageButton
         android:id="@+id/RecordRun"
-        android:layout_width="345dp"
-        android:layout_height="290dp"
+        android:layout_width="318dp"
+        android:layout_height="238dp"
         android:background="@color/neonGreen"
         android:backgroundTint="@color/neonGreen"
         android:contentDescription="@string/record"
@@ -20,9 +20,10 @@
         android:src="@drawable/stickman_runnning"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.527"
+        app:layout_constraintVertical_bias="0.248"
         app:tint="#00685757"
         tools:ignore="DuplicateSpeakableTextCheck,ImageContrastCheck"
         tools:src="@drawable/stickman_runnning"

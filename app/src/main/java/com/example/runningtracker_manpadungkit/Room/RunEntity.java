@@ -1,7 +1,5 @@
 package com.example.runningtracker_manpadungkit.Room;
 
-import android.media.Image;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 
@@ -23,17 +21,16 @@ public class RunEntity {
 
     @ColumnInfo(name = "run_distance")
     @NonNull
-    private float distance;
+    private double distance;
 
-    @ColumnInfo(name = "calories")
+    @ColumnInfo(name = "speed")
     @NonNull
-    private int Calories;
+    private int speed;
 
     @ColumnInfo(name = "run_date")
     @NonNull
-    private float time;
+    private float date;
 
-    private String name;
     private int rating;
     private String comment;
 
@@ -46,11 +43,11 @@ public class RunEntity {
     }
 
     //entity Constructor
-    public RunEntity(float duration, float distance, int Calories, float time, String name, int rating, String comment, byte[] image) {
+    public RunEntity(float duration, double distance, int speed, float date, int rating, String comment, byte[] image) {
         this.duration = duration;
         this.distance = distance;
-        this.time = time;
-        this.name = name;
+        this.speed = speed;
+        this.date = date;
         this.rating = rating;
         this.comment = comment;
         this.image = image;
@@ -58,8 +55,8 @@ public class RunEntity {
 
 
     //Different Getters
-    public int getCalories() {
-        return Calories;
+    public int getSpeed() {
+        return speed;
     }
     public int getId() {
         return id;
@@ -69,16 +66,12 @@ public class RunEntity {
         return duration;
     }
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public float getTime() {
-        return time;
-    }
-
-    public String getName() {
-        return name;
+    public float getDate() {
+        return date;
     }
 
     public int getRating() {

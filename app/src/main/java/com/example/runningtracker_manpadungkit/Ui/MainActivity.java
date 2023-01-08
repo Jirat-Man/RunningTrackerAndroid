@@ -36,15 +36,6 @@ public class MainActivity extends AppCompatActivity {
         //initialise ViewModel
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
 
-        RunEntity mRun1 = new RunEntity(100,100,100,200,
-                "Earth",4, "good", null);
-
-        RunEntity mRun2 = new RunEntity(2,2,2,2,
-                "Orm",2, "ye", null);
-
-        mRunViewModel.Insert(mRun1);
-        mRunViewModel.Insert(mRun2);
-
         mRecordRunButton = findViewById(R.id.RecordRun);
         mAnalyticsButton = findViewById(R.id.analyse);
 
@@ -52,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mRunViewModel.getAllRuns().observe(this, mAllRuns -> {
             Log.d("run", ": "+mAllRuns.size());
             for(RunEntity run: mAllRuns){
-                Log.d("run", run.getName());
+                Log.d("run", String.valueOf(run.getSpeed()));
             }
         });
 
