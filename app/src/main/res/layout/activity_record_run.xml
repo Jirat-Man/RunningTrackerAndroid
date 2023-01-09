@@ -7,11 +7,25 @@
     android:background="@color/black"
     tools:context=".Ui.RecordRunActivity">
 
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date"
+        android:textColor="@color/neonGreen"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.61"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.653" />
+
     <ImageButton
         android:id="@+id/stopButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@color/neonGreen"
+        android:background="@drawable/round_edge_button"
         android:contentDescription="@string/speedInt"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,6 +53,7 @@
 
     <TextView
         android:id="@+id/duration"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/speedInt"
         android:textColor="@color/neonGreen"
@@ -48,8 +63,7 @@
         app:layout_constraintHorizontal_bias="0.878"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.244"
-        android:layout_width="wrap_content" />
+        app:layout_constraintVertical_bias="0.2" />
 
     <TextView
         android:id="@+id/altitude"
@@ -60,13 +74,12 @@
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.726"
+        app:layout_constraintHorizontal_bias="0.729"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.606" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/distanceText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/distance"
@@ -74,6 +87,7 @@
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/distance"
+        android:layout_alignParentStart="true"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -91,7 +105,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.245" />
+        app:layout_constraintVertical_bias="0.2" />
 
     <TextView
         android:id="@+id/textView6"
@@ -104,8 +118,7 @@
         app:layout_constraintEnd_toStartOf="@+id/altitude"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.606" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView7"
@@ -117,10 +130,10 @@
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/speed"
-        app:layout_constraintHorizontal_bias="0.935"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.416" />
+        app:layout_constraintVertical_bias="0.342" />
 
     <TextView
         android:id="@+id/speed"
@@ -131,16 +144,16 @@
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.788"
+        app:layout_constraintHorizontal_bias="0.729"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.416" />
+        app:layout_constraintVertical_bias="0.342" />
 
     <ImageButton
         android:id="@+id/pauseButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@color/neonGreen"
+        android:background="@drawable/round_edge_button"
         android:contentDescription="@string/not_available"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"

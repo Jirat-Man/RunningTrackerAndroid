@@ -33,19 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //initialise ViewModel
-        mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
-
         mRecordRunButton = findViewById(R.id.RecordRun);
         mAnalyticsButton = findViewById(R.id.analyse);
-
-        //ViewModel observe LiveData
-        mRunViewModel.getAllRuns().observe(this, mAllRuns -> {
-            Log.d("run", ": "+mAllRuns.size());
-            for(RunEntity run: mAllRuns){
-                Log.d("run", String.valueOf(run.getSpeed()));
-            }
-        });
 
         //mRecordRunButton button listener
         mRecordRunButton.setOnClickListener(view -> {

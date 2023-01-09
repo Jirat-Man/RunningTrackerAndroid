@@ -7,10 +7,13 @@
     tools:context=".Ui.AnalyticsActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id= "@+id/recycler_view"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/run_card_view"/>
+        android:background="@color/black"
+        tools:layout_editor_absoluteX="-33dp"
+        tools:layout_editor_absoluteY="-130dp"
+        tools:listitem="@layout/run_card_view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

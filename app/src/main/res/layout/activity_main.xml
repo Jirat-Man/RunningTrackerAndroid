@@ -7,32 +7,30 @@
     android:background="@color/black"
     tools:context=".Ui.MainActivity">
 
+
     <ImageButton
         android:id="@+id/RecordRun"
-        android:layout_width="345dp"
-        android:layout_height="290dp"
-        android:background="@color/neonGreen"
-        android:backgroundTint="@color/neonGreen"
+        android:layout_width="354dp"
+        android:layout_height="353dp"
+        android:background="@color/black"
         android:contentDescription="@string/record"
-        android:cropToPadding="false"
-        android:foreground="@drawable/stickman_runnning"
-        android:scaleType="centerInside"
-        android:src="@drawable/stickman_runnning"
+        android:cropToPadding="true"
+        android:foreground="@drawable/running_man"
+        android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.527"
-        app:tint="#00685757"
-        tools:ignore="DuplicateSpeakableTextCheck,ImageContrastCheck"
-        tools:src="@drawable/stickman_runnning"
-        tools:srcCompat="@drawable/stickman_runnning" />
+        app:layout_constraintVertical_bias="0.525"
+        app:tint="@color/black"
+        tools:ignore="DuplicateSpeakableTextCheck,ImageContrastCheck" />
 
     <ImageButton
         android:id="@+id/analyse"
         android:layout_width="80dp"
         android:layout_height="76dp"
-        android:background="@color/neonGreen"
+        android:background="@color/black"
         android:contentDescription="@string/analytics"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -41,36 +39,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/analytic_icon"
+        app:srcCompat="@drawable/graph_icon"
         tools:ignore="DuplicateSpeakableTextCheck" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/pressToStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:foregroundTint="#332929"
-        android:text="@string/record"
+        android:fontFamily="sans-serif-light"
+        android:text="Press to Start"
         android:textColor="@color/neonGreen"
-        android:textColorLink="@color/neonGreen"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/RecordRun"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RecordRun"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/RecordRun"
+        app:layout_constraintVertical_bias="0.886" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/analytics"
-        android:textColor="@color/neonGreen"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/analyse"
-        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

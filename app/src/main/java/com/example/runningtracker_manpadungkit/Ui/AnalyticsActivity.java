@@ -18,7 +18,7 @@ import java.util.List;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
-    private RunViewModel mRunViewModel;
+    public static RunViewModel mRunViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +32,9 @@ public class AnalyticsActivity extends AppCompatActivity {
         RunAdapter adapter = new RunAdapter();
         recyclerView.setAdapter(adapter);
 
-        //RunEntity run1 = new RunEntity(20,20,10,30,5,"tiring", null);
 
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
-        
+
         mRunViewModel.getAllRuns().observe(this, new Observer<List<RunEntity>>() {
             @Override
             public void onChanged(List<RunEntity> runEntities) {

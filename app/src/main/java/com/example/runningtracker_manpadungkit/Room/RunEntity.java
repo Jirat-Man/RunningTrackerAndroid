@@ -17,7 +17,7 @@ public class RunEntity {
 
     @NonNull
     @ColumnInfo(name = "run_duration")
-    private float duration;
+    private String duration;
 
     @ColumnInfo(name = "run_distance")
     @NonNull
@@ -29,7 +29,7 @@ public class RunEntity {
 
     @ColumnInfo(name = "run_date")
     @NonNull
-    private float date;
+    private String date;
 
     private int rating;
     private String comment;
@@ -43,7 +43,7 @@ public class RunEntity {
     }
 
     //entity Constructor
-    public RunEntity(float duration, double distance, int speed, float date, int rating, String comment, byte[] image) {
+    public RunEntity(@NonNull String duration, double distance, int speed, @NonNull String date, int rating, String comment, byte[] image) {
         this.duration = duration;
         this.distance = distance;
         this.speed = speed;
@@ -62,7 +62,8 @@ public class RunEntity {
         return id;
     }
 
-    public float getDuration() {
+    @NonNull
+    public String getDuration() {
         return duration;
     }
 
@@ -70,7 +71,8 @@ public class RunEntity {
         return distance;
     }
 
-    public float getDate() {
+    @NonNull
+    public String getDate() {
         return date;
     }
 

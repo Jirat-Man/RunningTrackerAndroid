@@ -20,4 +20,6 @@
     <string name="rating">Rating: </string>
     <string name="comment">Comment: </string>
     <string name="no_comment">No Comment</string>
+    <string name="km">km</string>
+    <string name="m_s">m/s</string>
 </resources>

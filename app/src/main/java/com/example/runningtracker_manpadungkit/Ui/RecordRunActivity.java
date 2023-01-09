@@ -34,6 +34,7 @@ import android.os.Build;
 import com.example.runningtracker_manpadungkit.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class RecordRunActivity extends AppCompatActivity {
@@ -45,6 +46,11 @@ public class RecordRunActivity extends AppCompatActivity {
     private TextView mDurationTextView;
     private TextView mAltitudeTextView;
     private TextView mSpeedTextView;
+    private TextView mDateTextView;
+
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String date;
 
     Timer mTimer;
     TimerTask mTimerTask;
@@ -54,9 +60,14 @@ public class RecordRunActivity extends AppCompatActivity {
     private ImageButton mStopButton;
 
     double mDistance = 0;
+    String mDuration;
+    double mSpeed = 0;
+    String mDate;
     double mLongitude = 0;
     double mLatitude = 0;
+
     int counter = 0;
+    int seconds = 0;
 
     //Google's API for location service
     private FusedLocationProviderClient fusedLocationClient;
@@ -68,7 +79,7 @@ public class RecordRunActivity extends AppCompatActivity {
     private LocationCallback locationCallback;
 
     //ViewModel
-    RunViewModel mRunViewModel;
+    private RunViewModel mRunViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,17 +90,10 @@ public class RecordRunActivity extends AppCompatActivity {
 
         startTimer();
 
+        setDate();
+
         //initialise ViewModel
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
-
-
-        //ViewModel observe LiveData
-        mRunViewModel.getAllRuns().observe(this, mAllRuns -> {
-            org.chromium.base.Log.d("run", ": "+mAllRuns.size());
-            for(RunEntity run: mAllRuns){
-                org.chromium.base.Log.d("run", String.valueOf(run.getSpeed()));
-            }
-        });
 
         LocationRequest locationRequest = new
                 LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).build();
@@ -120,8 +124,15 @@ public class RecordRunActivity extends AppCompatActivity {
 
         mStopButton.setOnClickListener(view -> {
             stopButtonDialogConfirmation();
-            Log.d("Hello", "hello it worked");
         });
+    }
+
+    private void setDate() {
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("MM-dd-yyyy , HH:mm:ss");
+        date = dateFormat.format(calendar.getTime());
+        mDateTextView.setText(date);
+        mDate = date;
     }
 
     //brings up a dialog asking for confirmation from the user that they want to stop the run
@@ -132,11 +143,15 @@ public class RecordRunActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // CONFIRM
+                        //Insert run data into database
+                        RunEntity run = new RunEntity(mDuration, mDistance, (int) (mSpeed/seconds),mDate, 5,"hello",null);
+                        mRunViewModel.Insert(run);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // CANCEL
+                        mRunViewModel.DeleteAll();
                     }
                 });
 
@@ -155,6 +170,7 @@ public class RecordRunActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     mTime++;
                     mDurationTextView.setText(getTimerText());
+                    mDuration = getTimerText();
                 });
             }
 
@@ -202,6 +218,7 @@ public class RecordRunActivity extends AppCompatActivity {
         mSpeedTextView = findViewById(R.id.speed);
         mPauseButton = findViewById(R.id.pauseButton);
         mStopButton = findViewById(R.id.stopButton);
+        mDateTextView = findViewById(R.id.date);
     }
 
     private void updateLocation() {
@@ -228,11 +245,10 @@ public class RecordRunActivity extends AppCompatActivity {
     private void updateUI(Location location) {
         //Update all the textView with new location
         if (location != null) {
-            mDistanceTextView.setText(valueOf(getDistance(location)));
+            mDistance = getDistance(location);
+            mDistanceTextView.setText(String.valueOf(mDistance));
             mLongitude = location.getLongitude();
             mLatitude = location.getLatitude();
-
-            Log.d("HELLLOOOOO", String.valueOf(location.getLongitude()));
 
             //check if phone has altitude checker function
             if(location.hasAltitude()){
@@ -245,6 +261,8 @@ public class RecordRunActivity extends AppCompatActivity {
             //check if phone has speed checker function
             if(location.hasSpeed()){
                 mSpeedTextView.setText((String.valueOf((double) Math.round(location.getSpeed() * 1d))));
+                mSpeed += (double) Math.round(location.getSpeed() * 1d);
+                seconds++;
             }
             // if not put "Not Available"
             else{
