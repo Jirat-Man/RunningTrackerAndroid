@@ -8,11 +8,22 @@
     tools:context=".Ui.MainActivity">
 
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifTracking"
+        android:layout_width="109dp"
+        android:layout_height="114dp"
+        android:layout_marginTop="640dp"
+        android:src="@drawable/pulsating_green"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/RecordRun"
         android:layout_width="354dp"
         android:layout_height="353dp"
-        android:background="@color/black"
+        android:background="@drawable/circular_button"
         android:contentDescription="@string/record"
         android:cropToPadding="true"
         android:foreground="@drawable/running_man"
@@ -22,7 +33,7 @@
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.525"
+        app:layout_constraintVertical_bias="0.52"
         app:tint="@color/black"
         tools:ignore="DuplicateSpeakableTextCheck,ImageContrastCheck" />
 
@@ -47,10 +58,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-        android:text="Press to Start"
+        android:text="@string/press_to_start"
         android:textColor="@color/neonGreen"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/RecordRun"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/RecordRun"
+        app:layout_constraintVertical_bias="0.886" />
+
+    <TextView
+        android:id="@+id/trackingInProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/tracking_in_progress"
+        android:textColor="@color/neonGreen"
+        android:visibility="invisible"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/RecordRun"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/RecordRun"
         app:layout_constraintVertical_bias="0.886" />

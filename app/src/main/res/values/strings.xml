@@ -33,4 +33,6 @@
     <string name="distanceText">Distance(km)</string>
     <string name="start_time">Start Time:\u0020</string>
     <string name="average_speed">Average Speed:\u0020</string>
+    <string name="tracking_in_progress">Tracking in progress...</string>
+    <string name="press_to_start">Press to Start</string>
 </resources>

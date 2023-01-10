@@ -31,7 +31,7 @@ public class RunEntity {
     @NonNull
     private String date;
 
-    private int rating;
+    private float rating;
     private String comment;
 
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
@@ -43,7 +43,7 @@ public class RunEntity {
     }
 
     //entity Constructor
-    public RunEntity(@NonNull String duration, double distance, int speed, @NonNull String date, int rating, String comment, byte[] image) {
+    public RunEntity(@NonNull String duration, double distance, int speed, @NonNull String date, float rating, String comment, byte[] image) {
         this.duration = duration;
         this.distance = distance;
         this.speed = speed;
@@ -76,7 +76,7 @@ public class RunEntity {
         return date;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 

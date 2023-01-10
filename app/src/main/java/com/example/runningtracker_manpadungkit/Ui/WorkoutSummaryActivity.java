@@ -2,6 +2,7 @@ package com.example.runningtracker_manpadungkit.Ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -27,7 +28,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     String mRunComment;
 
     RatingBar mRunRatingBar;
-    int mNumberOfStars;
+    float mNumberOfStars;
 
     String mDistance;
     String mDuration;
@@ -45,15 +46,15 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         widgetInit();
 
         getRunResult();
-        getRunRating();
-        getRunComment();
-        getRunImage();
 
         //initialise ViewModel
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
 
         //mRecordRunButton button listener
         mDoneButton.setOnClickListener(view -> {
+            getRunRating();
+            getRunComment();
+            getRunImage();
             storeInRoomDatabase();
             finish();
         });
@@ -68,13 +69,15 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     }
 
     private void getRunRating() {
-        mNumberOfStars = mRunRatingBar.getNumStars();
+        mNumberOfStars = mRunRatingBar.getRating();
     }
 
     private void storeInRoomDatabase() {
         RunEntity run = new RunEntity(mDuration, Double.parseDouble(mDistance),
-                Integer.parseInt(mSpeed),mDate, mNumberOfStars,mRunComment,null);
+                Integer.parseInt(mSpeed),mDate, mNumberOfStars, mRunComment,null);
         mRunViewModel.Insert(run);
+        Log.d("ROOOM", String.valueOf(mNumberOfStars));
+        Log.d("ROOOM", String.valueOf(mRunComment));
     }
 
     private void getRunResult() {

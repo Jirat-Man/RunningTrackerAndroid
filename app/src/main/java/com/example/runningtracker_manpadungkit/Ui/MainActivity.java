@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -21,18 +20,23 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.example.runningtracker_manpadungkit.R;
-import com.example.runningtracker_manpadungkit.Room.RunEntity;
 import com.example.runningtracker_manpadungkit.ViewModel.RunViewModel;
+
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.chromium.base.Log;
+import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_GPS_CODE = 1;
     private RunViewModel mRunViewModel;
     ImageButton mRecordRunButton;
     ImageButton mAnalyticsButton;
+    GifImageView mGifTracking;
+    TextView mPressToStartTextView;
+    TextView mInProgressTextview;
 
     String mDistance;
     String mDuration;
@@ -69,9 +73,15 @@ public class MainActivity extends AppCompatActivity {
 
         mRecordRunButton = findViewById(R.id.RecordRun);
         mAnalyticsButton = findViewById(R.id.analyse);
+        mGifTracking = findViewById(R.id.gifTracking);
+        mPressToStartTextView = findViewById(R.id.pressToStart);
+        mInProgressTextview = findViewById(R.id.trackingInProgress);
 
         //mRecordRunButton button listener
         mRecordRunButton.setOnClickListener(view -> {
+            mGifTracking.setVisibility(View.VISIBLE);
+            mPressToStartTextView.setVisibility(View.INVISIBLE);
+            mInProgressTextview.setVisibility(View.VISIBLE);
             Intent journey = new Intent(MainActivity.this, RecordRunActivity.class);
             startForResult.launch(journey);
         });
