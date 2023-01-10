@@ -9,14 +9,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.location.Location;
 
 import com.example.runningtracker_manpadungkit.Room.RunEntity;
+import com.example.runningtracker_manpadungkit.Service.LocationService;
 import com.example.runningtracker_manpadungkit.ViewModel.RunViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -38,6 +44,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class RecordRunActivity extends AppCompatActivity {
+
+    public static int RUN_RESULT_CODE = 99;
+
+    LocationService locationService = new LocationService();
+    boolean isConnected = false;
 
     public static final int INTERVAL_MILLIS = 1000;
     private static final int PERMISSION_FINE_LOCATION = 1;
@@ -125,6 +136,31 @@ public class RecordRunActivity extends AppCompatActivity {
         mStopButton.setOnClickListener(view -> {
             stopButtonDialogConfirmation();
         });
+
+        mPauseButton.setOnClickListener(view -> {
+            pauseTracking();
+        });
+
+        //Intent intent = new Intent(this, LocationService.class);
+        //bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LocationService.MyLocalBinder binder = (LocationService.MyLocalBinder) service;
+            locationService = binder.getBoundService();
+            isConnected = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private void pauseTracking() {
+
     }
 
     private void setDate() {
@@ -144,14 +180,24 @@ public class RecordRunActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         // CONFIRM
                         //Insert run data into database
-                        RunEntity run = new RunEntity(mDuration, mDistance, (int) (mSpeed/seconds),mDate, 5,"hello",null);
-                        mRunViewModel.Insert(run);
+                        //RunEntity run = new RunEntity(mDuration, mDistance, (int) (mSpeed/seconds),mDate, 5,"hello",null);
+                        //mRunViewModel.Insert(run);
+                        //Intent journey = new Intent(RecordRunActivity.this, WorkoutSummaryActivity.class);
+                        //startActivity(journey);
+                        Intent intent = new Intent();
+                        intent.putExtra("distance", String.valueOf(mDistance));
+                        intent.putExtra("duration", mDuration);
+                        intent.putExtra("speed", String.valueOf((int) (mSpeed/seconds)));
+                        intent.putExtra("date", mDate);
+                        setResult(RUN_RESULT_CODE, intent);
+                        RecordRunActivity.super.onBackPressed();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // CANCEL
                         mRunViewModel.DeleteAll();
+
                     }
                 });
 

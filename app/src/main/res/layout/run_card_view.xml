@@ -13,8 +13,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/gray"
-        android:backgroundTint="@color/gray"
+        android:background="#202020"
+        android:backgroundTint="#202020"
         android:foregroundTint="@color/neonGreen"
         android:outlineAmbientShadowColor="@color/neonGreen"
         android:outlineSpotShadowColor="@color/neonGreen"
@@ -27,17 +27,19 @@
             android:layout_alignParentEnd="true"
             android:text="@string/duration"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/neonGreen" />
+            android:textColor="@color/neonGreen"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/km"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/runDuration"
             android:layout_toEndOf="@id/runDistance"
             android:text="@string/km"
-            android:layout_toStartOf="@id/runDuration"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/neonGreen" />
+            android:textColor="@color/neonGreen"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/runDistance"
@@ -48,7 +50,8 @@
             android:maxLines="1"
             android:text="@string/distance"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/neonGreen" />
+            android:textColor="@color/neonGreen"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/runDate"

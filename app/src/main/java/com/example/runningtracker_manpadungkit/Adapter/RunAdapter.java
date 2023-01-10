@@ -1,5 +1,6 @@
 package com.example.runningtracker_manpadungkit.Adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +31,11 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
     public void onBindViewHolder(@NonNull RunHolder holder, int position) {
         RunEntity currentRun = runEntities.get(position);
         holder.mRunDistanceView.setText(String.valueOf(currentRun.getDistance()));
-        holder.mRunDurationView.setText(String.valueOf(currentRun.getDuration()));
+        holder.mRunDurationView.setText(currentRun.getDuration());
         holder.mRunRatingView.setText(String.valueOf(currentRun.getRating()));
-        holder.mRunCommentView.setText(currentRun.getComment());
+        holder.mRunCommentView.setText(String.valueOf(currentRun.getComment()));
         holder.mRunSpeedView.setText(String.valueOf(currentRun.getSpeed()));
-        holder.mRunDateView.setText(String.valueOf(currentRun.getDate()));
+        holder.mRunDateView.setText(currentRun.getDate());
     }
 
     @Override
@@ -42,6 +43,7 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
         return runEntities.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setRunEntities(List<RunEntity> runEntities){
         this.runEntities = runEntities;
         notifyDataSetChanged();

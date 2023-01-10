@@ -1,5 +1,11 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
+import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.RUN_RESULT_CODE;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -28,6 +34,34 @@ public class MainActivity extends AppCompatActivity {
     ImageButton mRecordRunButton;
     ImageButton mAnalyticsButton;
 
+    String mDistance;
+    String mDuration;
+    String mSpeed;
+    String mDate;
+
+    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+             if(result != null && result.getResultCode() == RUN_RESULT_CODE){
+                 // launch the summary activity
+                 Intent resultIntent = result.getData();
+
+                 if(resultIntent != null){
+                     mDistance = resultIntent.getStringExtra("distance");
+                     mDuration = resultIntent.getStringExtra("duration");
+                     mSpeed = resultIntent.getStringExtra("speed");
+                     mDate = resultIntent.getStringExtra("date");
+                 }
+                 Intent intent = new Intent(MainActivity.this, WorkoutSummaryActivity.class);
+                 intent.putExtra("distance", mDistance);
+                 intent.putExtra("duration", mDuration);
+                 intent.putExtra("speed", mSpeed);
+                 intent.putExtra("date", mDate);
+                 startActivity(intent);
+             }
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         //mRecordRunButton button listener
         mRecordRunButton.setOnClickListener(view -> {
             Intent journey = new Intent(MainActivity.this, RecordRunActivity.class);
-            startActivity(journey);
+            startForResult.launch(journey);
         });
 
         mAnalyticsButton.setOnClickListener(view -> {

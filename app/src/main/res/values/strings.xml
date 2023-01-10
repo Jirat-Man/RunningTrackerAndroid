@@ -3,9 +3,8 @@
     <string name="google_map_key">AIzaSyBW61Zj45D_QJGtwNPxrYEoPfin-nMtfW0</string>
     <string name="distance">Distance:</string>
     <string name="duration">Duration:</string>
-    <string name="calories">Calories:</string>
-    <string name="altitude">Altitude:</string>
-    <string name="speed">Speed:</string>
+    <string name="altitude">Altitude</string>
+    <string name="speed">Speed(m/s)</string>
     <string name="speedInt">0</string>
     <string name="not_available">Not Available</string>
     <string name="record">Press to start tracking</string>
@@ -18,8 +17,20 @@
     <string name="cancel">Cancel</string>
     <string name="date">Date</string>
     <string name="rating">Rating: </string>
+    <string name="ratingText">Rating</string>
     <string name="comment">Comment: </string>
     <string name="no_comment">No Comment</string>
-    <string name="km">km</string>
-    <string name="m_s">m/s</string>
+    <string name="km">\u0020km</string>
+    <string name="m_s">\u0020m/s</string>
+    <string name="workout_summary">Workout Summary</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="browse_device">Browse Device</string>
+    <string name="default_comment">Default Comment</string>
+    <string name="comment_text">Comment</string>
+    <string name="done">Done</string>
+    <string name="duration_text">Duration</string>
+    <string name="default_time"> 00:00:00</string>
+    <string name="distanceText">Distance(km)</string>
+    <string name="start_time">Start Time:\u0020</string>
+    <string name="average_speed">Average Speed:\u0020</string>
 </resources>
