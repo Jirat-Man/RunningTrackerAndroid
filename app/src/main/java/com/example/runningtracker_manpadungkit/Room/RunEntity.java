@@ -25,7 +25,7 @@ public class RunEntity {
 
     @ColumnInfo(name = "speed")
     @NonNull
-    private int speed;
+    private String speed;
 
     @ColumnInfo(name = "run_date")
     @NonNull
@@ -43,7 +43,7 @@ public class RunEntity {
     }
 
     //entity Constructor
-    public RunEntity(@NonNull String duration, double distance, int speed, @NonNull String date, float rating, String comment, byte[] image) {
+    public RunEntity(@NonNull String duration, double distance, String speed, @NonNull String date, float rating, String comment, byte[] image) {
         this.duration = duration;
         this.distance = distance;
         this.speed = speed;
@@ -55,7 +55,7 @@ public class RunEntity {
 
 
     //Different Getters
-    public int getSpeed() {
+    public String getSpeed() {
         return speed;
     }
     public int getId() {

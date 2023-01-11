@@ -74,10 +74,8 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
     private void storeInRoomDatabase() {
         RunEntity run = new RunEntity(mDuration, Double.parseDouble(mDistance),
-                Integer.parseInt(mSpeed),mDate, mNumberOfStars, mRunComment,null);
+                mSpeed,mDate, mNumberOfStars, mRunComment,null);
         mRunViewModel.Insert(run);
-        Log.d("ROOOM", String.valueOf(mNumberOfStars));
-        Log.d("ROOOM", String.valueOf(mRunComment));
     }
 
     private void getRunResult() {

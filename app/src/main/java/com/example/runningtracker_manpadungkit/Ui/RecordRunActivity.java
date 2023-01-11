@@ -8,20 +8,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.location.Location;
 
-import com.example.runningtracker_manpadungkit.Room.RunEntity;
 import com.example.runningtracker_manpadungkit.Service.LocationService;
 import com.example.runningtracker_manpadungkit.ViewModel.RunViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,12 +41,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class RecordRunActivity extends AppCompatActivity {
+public class RecordRunActivity extends AppCompatActivity{
 
     public static int RUN_RESULT_CODE = 99;
 
     LocationService locationService = new LocationService();
-    boolean isConnected = false;
+    boolean isBound = false;
 
     public static final int INTERVAL_MILLIS = 1000;
     private static final int PERMISSION_FINE_LOCATION = 1;
@@ -76,6 +74,8 @@ public class RecordRunActivity extends AppCompatActivity {
     String mDate;
     double mLongitude = 0;
     double mLatitude = 0;
+    String mAltitude;
+    String mAvgSpeed;
 
     int counter = 0;
     int seconds = 0;
@@ -92,6 +92,10 @@ public class RecordRunActivity extends AppCompatActivity {
     //ViewModel
     private RunViewModel mRunViewModel;
 
+    private Handler handler;
+
+    private LocationService.MyLocalBinder service;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,39 +103,10 @@ public class RecordRunActivity extends AppCompatActivity {
 
         widgetInit();
 
-        startTimer();
-
-        setDate();
+        checkLocationPermission();
 
         //initialise ViewModel
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
-
-        LocationRequest locationRequest = new
-                LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).build();
-
-        //called every interval
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                for (Location location : locationResult.getLocations()) {
-                    Log.d("help123", "onLocationResult: ");
-                    updateUI(location);
-                }
-            }
-        };
-        updateLocation();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
         mStopButton.setOnClickListener(view -> {
             stopButtonDialogConfirmation();
@@ -141,34 +116,82 @@ public class RecordRunActivity extends AppCompatActivity {
             pauseTracking();
         });
 
-        //Intent intent = new Intent(this, LocationService.class);
-        //bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private void checkLocationPermission() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            //permission is granted
+            fusedLocationClient.getLastLocation().addOnSuccessListener(RecordRunActivity.this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    //permission granted and ready to use
+                    serviceBind();
+                }
+            });
+        }
+        else{
+            //permission denied
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+                Toast.makeText(this, "You don't have Location Permission", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void serviceBind() {
+        Intent intent = new Intent(RecordRunActivity.this, LocationService.class);
+        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            LocationService.MyLocalBinder binder = (LocationService.MyLocalBinder) service;
-            locationService = binder.getBoundService();
-            isConnected = true;
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            service = (LocationService.MyLocalBinder) binder;
+            //locationService = service.getBoundService();
+            handler = new Handler();
+            isBound = true;
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (service != null) {
+                        mDistance = service.getDistance();
+                        mDuration = service.getDuration();
+                        mSpeed = service.getSpeed();
+                        mDate = service.getDate();
+                        mAltitude = service.getAltitude();
+                        mAvgSpeed = String.valueOf(service.getAvgSpeed());
+
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDistanceTextView.setText(String.valueOf(mDistance));
+                                mSpeedTextView.setText(String.valueOf(mSpeed));
+                                mDurationTextView.setText(String.valueOf(mDuration));
+                                mAltitudeTextView.setText(mAltitude);
+                                mDateTextView.setText(mDate);
+                            }
+                        });
+                        try {
+                            Thread.sleep(500);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            service = null;
+            isBound = false;
         }
     };
 
     private void pauseTracking() {
 
-    }
-
-    private void setDate() {
-        calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("MM-dd-yyyy , HH:mm:ss");
-        date = dateFormat.format(calendar.getTime());
-        mDateTextView.setText(date);
-        mDate = date;
     }
 
     //brings up a dialog asking for confirmation from the user that they want to stop the run
@@ -178,16 +201,10 @@ public class RecordRunActivity extends AppCompatActivity {
                 .setTitle(R.string.confirm_dialog_title)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // CONFIRM
-                        //Insert run data into database
-                        //RunEntity run = new RunEntity(mDuration, mDistance, (int) (mSpeed/seconds),mDate, 5,"hello",null);
-                        //mRunViewModel.Insert(run);
-                        //Intent journey = new Intent(RecordRunActivity.this, WorkoutSummaryActivity.class);
-                        //startActivity(journey);
                         Intent intent = new Intent();
                         intent.putExtra("distance", String.valueOf(mDistance));
                         intent.putExtra("duration", mDuration);
-                        intent.putExtra("speed", String.valueOf((int) (mSpeed/seconds)));
+                        intent.putExtra("speed", mAvgSpeed);
                         intent.putExtra("date", mDate);
                         setResult(RUN_RESULT_CODE, intent);
                         RecordRunActivity.super.onBackPressed();
@@ -205,58 +222,6 @@ public class RecordRunActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-
-    private void startTimer() {
-        mTimer = new Timer();
-        mTimerTask = new TimerTask()
-        {
-            @Override
-            public void run()
-            {
-                runOnUiThread(() -> {
-                    mTime++;
-                    mDurationTextView.setText(getTimerText());
-                    mDuration = getTimerText();
-                });
-            }
-
-        };
-        mTimer.scheduleAtFixedRate(mTimerTask, 0 ,1000);
-    }
-
-    private String getTimerText()
-    {
-        int rounded = (int) Math.round(mTime);
-
-        int seconds = ((rounded % 86400) % 3600) % 60;
-        int minutes = ((rounded % 86400) % 3600) / 60;
-        int hours = ((rounded % 86400) / 3600);
-
-        return formatTime(seconds, minutes, hours);
-    }
-
-    private String formatTime(int seconds, int minutes, int hours)
-    {
-        return String.format("%02d",hours) + " : " + String.format("%02d",minutes) + " : " + String.format("%02d",seconds);
-    }
-
-    //Check if Location permission is granted
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch(requestCode){
-            case PERMISSION_FINE_LOCATION:
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    updateLocation();
-                }
-                else{
-                    Toast.makeText(this, "Location permission needed", Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
-    }
-
     private void widgetInit() {
         mDistanceTextView = findViewById(R.id.distance);
         mDurationTextView = findViewById(R.id.duration);
@@ -265,79 +230,5 @@ public class RecordRunActivity extends AppCompatActivity {
         mPauseButton = findViewById(R.id.pauseButton);
         mStopButton = findViewById(R.id.stopButton);
         mDateTextView = findViewById(R.id.date);
-    }
-
-    private void updateLocation() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            //permission is granted
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    //permission granted and ready to use
-                    updateUI(location);
-                }
-            });
-        }
-        else{
-            //permission denied
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-                requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
-            }
-        }
-    }
-
-    private void updateUI(Location location) {
-        //Update all the textView with new location
-        if (location != null) {
-            mDistance = getDistance(location);
-            mDistanceTextView.setText(String.valueOf(mDistance));
-            mLongitude = location.getLongitude();
-            mLatitude = location.getLatitude();
-
-            //check if phone has altitude checker function
-            if(location.hasAltitude()){
-                mAltitudeTextView.setText(valueOf(location.getAltitude()));
-            }
-            // if not put "Not Available"
-            else{
-                mAltitudeTextView.setText(R.string.not_available);
-            }
-            //check if phone has speed checker function
-            if(location.hasSpeed()){
-                mSpeedTextView.setText((String.valueOf((double) Math.round(location.getSpeed() * 1d))));
-                mSpeed += (double) Math.round(location.getSpeed() * 1d);
-                seconds++;
-            }
-            // if not put "Not Available"
-            else{
-                mSpeedTextView.setText(R.string.not_available);
-            }
-        }
-    }
-
-    //Return the distance covered by using Longitude and Latitude using Haversine Formula
-    private double getDistance(Location location) {
-        counter++;
-        if(counter > 1){
-            int EARTH_RADIUS = 6371; // Approx Earth radius in KM
-
-            double dLat = Math.toRadians((location.getLatitude() - mLatitude));
-            double dLong = Math.toRadians((location.getLongitude() - mLongitude));
-
-            double startLat = Math.toRadians(mLatitude);
-            double endLat = Math.toRadians(location.getLatitude());
-
-            double a = haversine(dLat) + Math.cos(startLat) * Math.cos(endLat) * haversine(dLong);
-            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-            mDistance = mDistance + (EARTH_RADIUS * c);
-        }
-        return (double)Math.round(mDistance * 100d) / 100d; // <-- d
-    }
-
-    private double haversine(double val) {
-        return Math.pow(Math.sin(val / 2), 2);
     }
 }
