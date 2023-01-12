@@ -10,7 +10,6 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -77,10 +76,11 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             //Toast.makeText(this, "here", Toast.LENGTH_SHORT).show();
             getRunResult();
         }
+        mBrowseButton.setOnClickListener(view -> {
+        });
 
-        //mRecordRunButton button listener
+        //mDoneButton button listener
         mDoneButton.setOnClickListener(view -> {
-            storeRunData();
             WorkoutSummaryActivity.super.onBackPressed();
         });
     }
@@ -99,6 +99,14 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
     //Handle the event where the activity is destroyed
     //save and store all the data inside the room database
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        storeRunData();
+    }
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -146,7 +154,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
     private void widgetInit() {
         mDoneButton = findViewById(R.id.doneButton);
-        mBrowseButton = findViewById(R.id.browseButton);
+        mBrowseButton = findViewById(R.id.uploadImageButton);
         mDistanceTextView = findViewById(R.id.runDistance);
         mDurationTextView = findViewById(R.id.runDuration);
         mDateTextView = findViewById(R.id.runDate);
