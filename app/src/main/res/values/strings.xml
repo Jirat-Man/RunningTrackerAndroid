@@ -35,4 +35,7 @@
     <string name="average_speed">Average Speed:\u0020</string>
     <string name="tracking_in_progress">Tracking in progress...</string>
     <string name="press_to_start">Press to Start</string>
+    <string name="delete_run">Delete run?</string>
+    <string name="confirm_delete_run">Click confirm to delete your run</string>
+    <string name="delete_all_run_history">Delete all run history</string>
 </resources>

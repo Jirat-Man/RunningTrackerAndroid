@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                  intent.putExtra("speed", mSpeed);
                  intent.putExtra("date", mDate);
                  startActivity(intent);
+
+                 //set gif and text as invisible when tracking is finished
                  tracking = false;
                  mGifTracking.setVisibility(View.INVISIBLE);
                  mPressToStartTextView.setVisibility(View.VISIBLE);

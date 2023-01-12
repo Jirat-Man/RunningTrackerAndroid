@@ -49,6 +49,10 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
         notifyDataSetChanged();
     }
 
+    public RunEntity getRunAt(int position){
+        return runEntities.get(position);
+    }
+
     class RunHolder extends RecyclerView.ViewHolder{
 
         private TextView mRunDistanceView;
