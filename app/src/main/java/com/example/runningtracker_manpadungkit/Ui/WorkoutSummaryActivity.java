@@ -1,11 +1,21 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_COMMENT;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DISTANCE;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_ID;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_RATING;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,6 +43,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     String mDuration;
     String mDate;
     String mSpeed;
+    int id;
 
     RunViewModel mRunViewModel;
 
@@ -44,18 +55,41 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
         widgetInit();
 
-        getRunResult();
-
         //initialise ViewModel
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
+
+        if(getIntent().hasExtra(EXTRA_ID)){
+            id = getIntent().getIntExtra(EXTRA_ID, -1);
+            mDistanceTextView.setText(getIntent().getStringExtra(EXTRA_DISTANCE));
+            mDurationTextView.setText(getIntent().getStringExtra(EXTRA_DURATION));
+            mDateTextView.setText(getIntent().getStringExtra(EXTRA_DATE));
+            mSpeedTextView.setText(getIntent().getStringExtra(EXTRA_SPEED));
+            mRunRatingBar.setRating(getIntent().getFloatExtra(EXTRA_RATING, 0));
+            mRunCommentEditText.setText(getIntent().getStringExtra(EXTRA_COMMENT));
+
+
+            mDistance = getIntent().getStringExtra(EXTRA_DISTANCE) ;
+            mDuration = getIntent().getStringExtra(EXTRA_DURATION);
+            mDate = getIntent().getStringExtra(EXTRA_DATE);
+            mSpeed = getIntent().getStringExtra(EXTRA_SPEED);
+        }
+        else if(getIntent().hasExtra("distance_from_record")){
+            //Toast.makeText(this, "here", Toast.LENGTH_SHORT).show();
+            getRunResult();
+        }
 
         //mRecordRunButton button listener
         mDoneButton.setOnClickListener(view -> {
             getRunRating();
             getRunComment();
             getRunImage();
-            storeInRoomDatabase();
-            finish();
+            if(getIntent().hasExtra("distance_from_record")){
+                storeInRoomDatabase();
+            }
+            else if(getIntent().hasExtra(EXTRA_ID)){
+                updateRoomDatabase();
+            }
+            WorkoutSummaryActivity.super.onBackPressed();
         });
     }
 
@@ -67,7 +101,20 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         getRunRating();
         getRunComment();
         getRunImage();
-        storeInRoomDatabase();
+        if(getIntent().hasExtra("distance_from_record")){
+            storeInRoomDatabase();
+        }
+        else{
+            updateRoomDatabase();
+        }
+    }
+
+    private void updateRoomDatabase() {
+        RunEntity run = new RunEntity(mDuration, mDistance,
+                mSpeed,mDate, mNumberOfStars, mRunComment,null);
+        //Log.d("HELLPPPP", mDuration+mDistance+mSpeed+mDate);
+        run.setId(id);
+        mRunViewModel.Update(run);
     }
 
     private void getRunImage() {
@@ -83,19 +130,20 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     }
 
     private void storeInRoomDatabase() {
-        RunEntity run = new RunEntity(mDuration, Double.parseDouble(mDistance),
+        RunEntity run = new RunEntity(mDuration, mDistance,
                 mSpeed,mDate, mNumberOfStars, mRunComment,null);
+        Toast.makeText(this, "here", Toast.LENGTH_SHORT).show();
         mRunViewModel.Insert(run);
     }
 
     private void getRunResult() {
         Intent intent = getIntent();
-        mDistanceTextView.setText(intent.getStringExtra("distance"));
+        mDistanceTextView.setText(intent.getStringExtra("distance_from_record"));
         mDurationTextView.setText(intent.getStringExtra("duration"));
         mDateTextView.setText(intent.getStringExtra("date"));
         mSpeedTextView.setText(intent.getStringExtra("speed"));
 
-        mDistance = intent.getStringExtra("distance") ;
+        mDistance = intent.getStringExtra("distance_from_record") ;
         mDuration = intent.getStringExtra("duration");
         mDate = intent.getStringExtra("date");
         mSpeed = intent.getStringExtra("speed");

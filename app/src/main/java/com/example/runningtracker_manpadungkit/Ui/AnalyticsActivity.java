@@ -1,7 +1,19 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
+import static com.example.runningtracker_manpadungkit.Constants.EDIT_RUN_REQUEST;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_COMMENT;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DISTANCE;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_ID;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_RATING;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +27,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,10 +44,24 @@ public class AnalyticsActivity extends AppCompatActivity {
 
     public static RunViewModel mRunViewModel;
 
-    @Override
+
+    //handle result from updating information in run history
+    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if(result != null && result.getResultCode() == EDIT_RUN_REQUEST){
+
+                }
+            }
+        });
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analytics);
+
+        this.setTitle("Run History");
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -83,6 +110,20 @@ public class AnalyticsActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
+        adapter.setUpRunListener(new RunAdapter.onRunClickListener() {
+            @Override
+            public void onRunClick(RunEntity runEntity) {
+                Intent intent = new Intent(AnalyticsActivity.this, WorkoutSummaryActivity.class);
+                intent.putExtra(EXTRA_ID, runEntity.getId());
+                intent.putExtra(EXTRA_DISTANCE, runEntity.getDistance());
+                intent.putExtra(EXTRA_DURATION, runEntity.getDuration());
+                intent.putExtra(EXTRA_SPEED, runEntity.getSpeed());
+                intent.putExtra(EXTRA_DATE, runEntity.getDate());
+                intent.putExtra(EXTRA_RATING, runEntity.getRating());
+                intent.putExtra(EXTRA_COMMENT, runEntity.getComment());
+                startForResult.launch(intent);
+            }
+        });
     }
 
     @Override

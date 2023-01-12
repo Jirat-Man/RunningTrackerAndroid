@@ -54,13 +54,13 @@ public class MainActivity extends AppCompatActivity {
                  Intent resultIntent = result.getData();
 
                  if(resultIntent != null){
-                     mDistance = resultIntent.getStringExtra("distance");
+                     mDistance = resultIntent.getStringExtra("distance_from_record");
                      mDuration = resultIntent.getStringExtra("duration");
                      mSpeed = resultIntent.getStringExtra("speed");
                      mDate = resultIntent.getStringExtra("date");
                  }
                  Intent intent = new Intent(MainActivity.this, WorkoutSummaryActivity.class);
-                 intent.putExtra("distance", mDistance);
+                 intent.putExtra("distance_from_record", mDistance);
                  intent.putExtra("duration", mDuration);
                  intent.putExtra("speed", mSpeed);
                  intent.putExtra("date", mDate);

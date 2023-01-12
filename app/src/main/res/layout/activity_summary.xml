@@ -11,25 +11,25 @@
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="12dp"
+        android:layout_width="352dp"
+        android:layout_height="119dp"
+        android:layout_marginBottom="4dp"
         android:autofillHints="Great Run"
         android:background="@drawable/gray_round_edge"
+        android:gravity="top|start"
         android:hint="@string/default_comment"
         android:inputType="textMultiLine"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
         android:textAlignment="inherit"
         android:textColor="@color/white"
-        android:gravity="top|start"
         android:textColorHighlight="@color/white"
         android:textColorHint="@color/white"
         android:textColorLink="@color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/doneButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -46,8 +46,8 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="372dp"
+        android:layout_height="48dp"
         android:orientation="horizontal"
         android:text="@string/workout_summary"
         android:textAllCaps="false"
@@ -64,7 +64,7 @@
         android:id="@+id/relativeLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/gray_round_edge"
         android:backgroundTint="#202020"
         android:foregroundTint="@color/neonGreen"
@@ -166,6 +166,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:text="@string/ratingText"
         android:textColor="@color/white"
         android:textSize="24sp"
@@ -177,9 +178,9 @@
 
     <RatingBar
         android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="56dp"
+        android:layout_width="238dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/gray_round_edge"
         android:contentDescription="@string/ratingText"
         android:isIndicator="false"
@@ -195,6 +196,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:text="@string/upload_image"
         android:textColor="@color/white"
         android:textSize="24sp"
@@ -206,25 +208,38 @@
     <Button
         android:id="@+id/browseButton"
         style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_width="140dp"
+        android:layout_height="30dp"
         android:background="@drawable/green_round_edge"
         android:text="@string/browse_device"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <Button
         android:id="@+id/doneButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="72dp"
+        android:layout_height="30dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/green_round_edge"
         android:text="@string/done"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.938"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="371dp"
+        android:layout_height="289dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.525"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/running_man"
+        android:contentDescription="@string/upload_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

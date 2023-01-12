@@ -11,24 +11,19 @@ public class RunEntity {
 
     //Different Data Stored in the table
     @PrimaryKey(autoGenerate = true)//auto generate ID
-    @NonNull
     @ColumnInfo(name = "run_id")
     private int id;
 
-    @NonNull
     @ColumnInfo(name = "run_duration")
     private String duration;
 
     @ColumnInfo(name = "run_distance")
-    @NonNull
-    private double distance;
+    private String distance;
 
     @ColumnInfo(name = "speed")
-    @NonNull
     private String speed;
 
     @ColumnInfo(name = "run_date")
-    @NonNull
     private String date;
 
     private float rating;
@@ -43,7 +38,7 @@ public class RunEntity {
     }
 
     //entity Constructor
-    public RunEntity(@NonNull String duration, double distance, String speed, @NonNull String date, float rating, String comment, byte[] image) {
+    public RunEntity(String duration, String distance, String speed,String date, float rating, String comment, byte[] image) {
         this.duration = duration;
         this.distance = distance;
         this.speed = speed;
@@ -67,7 +62,7 @@ public class RunEntity {
         return duration;
     }
 
-    public double getDistance() {
+    public String getDistance() {
         return distance;
     }
 

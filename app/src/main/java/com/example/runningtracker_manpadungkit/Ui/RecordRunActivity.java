@@ -183,7 +183,7 @@ public class RecordRunActivity extends AppCompatActivity{
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();
-                        intent.putExtra("distance", String.valueOf(mDistance));
+                        intent.putExtra("distance_from_record", String.valueOf(mDistance));
                         intent.putExtra("duration", mDuration);
                         intent.putExtra("speed", mAvgSpeed);
                         intent.putExtra("date", mDate);

@@ -18,6 +18,7 @@ import java.util.List;
 public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
 
     private List<RunEntity> runEntities = new ArrayList<>();
+    private onRunClickListener listener;
     
     @NonNull
     @Override
@@ -65,6 +66,16 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
         public RunHolder(@NonNull View itemView) {
             super(itemView);
             widgetInit();
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if( position != RecyclerView.NO_POSITION && listener != null){
+                        listener.onRunClick(runEntities.get(position));
+                    }
+                }
+            });
         }
 
         private void widgetInit() {
@@ -75,5 +86,12 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
             mRunRatingView = itemView.findViewById(R.id.runRating);
             mRunCommentView = itemView.findViewById(R.id.runComment);
         }
+    }
+
+    public interface onRunClickListener{
+        void onRunClick(RunEntity runEntity);
+    }
+    public void setUpRunListener(onRunClickListener listener){
+        this.listener = listener;
     }
 }

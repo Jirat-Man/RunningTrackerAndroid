@@ -26,9 +26,7 @@ public class RunRepository {
         new insertAsyncTask(mRunDao).execute(runEntity);
     }
     public void Update(RunEntity runEntity) {
-        RunRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mRunDao.update(runEntity);
-        });
+        new UpdateRunAsyncTask(mRunDao).execute(runEntity);
     }
     public void Delete(RunEntity runEntity) {
         RunRoomDatabase.databaseWriteExecutor.execute(() -> {
@@ -54,6 +52,20 @@ public class RunRepository {
         @Override
         protected Void doInBackground(RunEntity... runEntities) {
             runDao.insert(runEntities[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateRunAsyncTask extends AsyncTask<RunEntity, Void, Void> {
+        private RunDao runDao;
+
+        UpdateRunAsyncTask(RunDao runDao) {
+            this.runDao = runDao;
+        }
+
+        @Override
+        protected Void doInBackground(RunEntity... runEntities) {
+            runDao.update(runEntities[0]);
             return null;
         }
     }

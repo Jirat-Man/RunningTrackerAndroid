@@ -21,7 +21,6 @@
             android:name=".Service.LocationService"
             android:enabled="true"
             android:exported="true" />
-
         <activity
             android:name=".Ui.WorkoutSummaryActivity"
             android:exported="false">
@@ -30,6 +29,7 @@
                 android:value="" />
         </activity>
         <activity
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
             android:name=".Ui.AnalyticsActivity"
             android:exported="false">
             <meta-data
