@@ -1,6 +1,7 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
-import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.RUN_RESULT_CODE;
+import static com.example.runningtracker_manpadungkit.Constants.PERMISSION_GPS_CODE;
+import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -20,7 +21,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.example.runningtracker_manpadungkit.R;
-import com.example.runningtracker_manpadungkit.ViewModel.RunViewModel;
+import com.example.runningtracker_manpadungkit.RunViewModel;
 
 import android.view.View;
 import android.widget.ImageButton;
@@ -30,7 +31,7 @@ import android.widget.Toast;
 import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int PERMISSION_GPS_CODE = 1;
+
     private RunViewModel mRunViewModel;
     ImageButton mRecordRunButton;
     ImageButton mAnalyticsButton;
@@ -42,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
     String mDuration;
     String mSpeed;
     String mDate;
+    public static Boolean tracking = false;
 
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
+
              if(result != null && result.getResultCode() == RUN_RESULT_CODE){
                  // launch the summary activity
                  Intent resultIntent = result.getData();
@@ -62,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
                  intent.putExtra("speed", mSpeed);
                  intent.putExtra("date", mDate);
                  startActivity(intent);
+                 tracking = false;
+                 mGifTracking.setVisibility(View.INVISIBLE);
+                 mPressToStartTextView.setVisibility(View.VISIBLE);
+                 mInProgressTextview.setVisibility(View.INVISIBLE);
              }
         }
     });
@@ -77,13 +84,25 @@ public class MainActivity extends AppCompatActivity {
         mPressToStartTextView = findViewById(R.id.pressToStart);
         mInProgressTextview = findViewById(R.id.trackingInProgress);
 
-        //mRecordRunButton button listener
-        mRecordRunButton.setOnClickListener(view -> {
+        if(tracking){
             mGifTracking.setVisibility(View.VISIBLE);
             mPressToStartTextView.setVisibility(View.INVISIBLE);
             mInProgressTextview.setVisibility(View.VISIBLE);
+        }
+        else{
+            mGifTracking.setVisibility(View.INVISIBLE);
+            mPressToStartTextView.setVisibility(View.VISIBLE);
+            mInProgressTextview.setVisibility(View.INVISIBLE);
+        }
+
+        //mRecordRunButton button listener
+        mRecordRunButton.setOnClickListener(view -> {
             Intent journey = new Intent(MainActivity.this, RecordRunActivity.class);
             startForResult.launch(journey);
+            mGifTracking.setVisibility(View.VISIBLE);
+            mPressToStartTextView.setVisibility(View.INVISIBLE);
+            mInProgressTextview.setVisibility(View.VISIBLE);
+            tracking = true;
         });
 
         mAnalyticsButton.setOnClickListener(view -> {

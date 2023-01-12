@@ -10,9 +10,8 @@ import android.os.Bundle;
 
 import com.example.runningtracker_manpadungkit.Adapter.RunAdapter;
 import com.example.runningtracker_manpadungkit.R;
-import com.example.runningtracker_manpadungkit.Room.RunDao;
 import com.example.runningtracker_manpadungkit.Room.RunEntity;
-import com.example.runningtracker_manpadungkit.ViewModel.RunViewModel;
+import com.example.runningtracker_manpadungkit.RunViewModel;
 
 import java.util.List;
 

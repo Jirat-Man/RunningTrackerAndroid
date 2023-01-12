@@ -1,7 +1,8 @@
 package com.example.runningtracker_manpadungkit.Service;
 
-import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.INTERVAL_MILLIS;
 
+
+import static com.example.runningtracker_manpadungkit.Constants.INTERVAL_MILLIS;
 import static org.chromium.base.ThreadUtils.runOnUiThread;
 import static java.lang.String.valueOf;
 
@@ -37,8 +38,6 @@ import java.util.concurrent.Executor;
 
 public class LocationService extends Service {
 
-    //private MyLocalBinder localBinder = new MyLocalBinder();
-
     private IBinder binder = new MyLocalBinder();
 
     //Google's API for location service
@@ -66,9 +65,7 @@ public class LocationService extends Service {
     private String date;
     Timer mTimer;
     TimerTask mTimerTask;
-    double mTime = 0.0;
-
-    private Handler handler;
+    double mTime = -1.0;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -207,6 +204,25 @@ public class LocationService extends Service {
         return Math.pow(Math.sin(val / 2), 2);
     }
 
+    protected void resetLocation(){
+        mDistance = 0;
+        mDuration = "00 : 00 : 00";
+        mSpeed = 0;
+        mAvgSpeed = 0;
+        seconds = 0;
+        mDate = "Date";
+        mAltitude = 0;
+        mTime = -1;
+        counter = 0;
+        mLatitude = 0;
+        mLongitude = 0;
+    }
+
+    @Override
+    public void onDestroy() {
+        resetLocation();
+        super.onDestroy();
+    }
 
     //return service to activity, bind service to activity
     public class MyLocalBinder extends Binder {
@@ -227,6 +243,9 @@ public class LocationService extends Service {
         }
         public String getDate(){return LocationService.this.mDate;}
         public String getAltitude(){return String.valueOf(LocationService.this.mAltitude);}
+        public void resetLocation(){
+            LocationService.this.resetLocation();
+        }
     }
 
 }

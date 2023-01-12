@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.ViewModel;
+package com.example.runningtracker_manpadungkit;
 
 import android.app.Application;
 

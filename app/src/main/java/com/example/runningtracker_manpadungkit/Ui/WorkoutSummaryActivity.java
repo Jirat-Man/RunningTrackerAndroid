@@ -2,7 +2,6 @@ package com.example.runningtracker_manpadungkit.Ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -13,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.runningtracker_manpadungkit.R;
 import com.example.runningtracker_manpadungkit.Room.RunEntity;
-import com.example.runningtracker_manpadungkit.ViewModel.RunViewModel;
+import com.example.runningtracker_manpadungkit.RunViewModel;
 
 public class WorkoutSummaryActivity extends AppCompatActivity {
 
@@ -58,6 +57,17 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             storeInRoomDatabase();
             finish();
         });
+    }
+
+    //Handle the event where the back button is pressed
+    //save and store all the data inside the room database
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getRunRating();
+        getRunComment();
+        getRunImage();
+        storeInRoomDatabase();
     }
 
     private void getRunImage() {

@@ -1,8 +1,7 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
-import static java.lang.String.*;
+import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -15,19 +14,16 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.location.Location;
 
 import com.example.runningtracker_manpadungkit.Service.LocationService;
-import com.example.runningtracker_manpadungkit.ViewModel.RunViewModel;
+import com.example.runningtracker_manpadungkit.RunViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
 
 
 import android.widget.Toast;
@@ -38,47 +34,31 @@ import android.os.Build;
 import com.example.runningtracker_manpadungkit.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 public class RecordRunActivity extends AppCompatActivity{
 
-    public static int RUN_RESULT_CODE = 99;
-
-    LocationService locationService = new LocationService();
+    //Service intent for location service
+    Intent serviceIntent;
+    //Boolean to check if there is any service binded to the activity
     boolean isBound = false;
 
-    public static final int INTERVAL_MILLIS = 1000;
-    private static final int PERMISSION_FINE_LOCATION = 1;
-
+    //All the textview in the activity
     private TextView mDistanceTextView;
     private TextView mDurationTextView;
     private TextView mAltitudeTextView;
     private TextView mSpeedTextView;
     private TextView mDateTextView;
 
-    private Calendar calendar;
-    private SimpleDateFormat dateFormat;
-    private String date;
-
-    Timer mTimer;
-    TimerTask mTimerTask;
-    double mTime = 0.0;
-
+    //All the buttons in the activity
     private ImageButton mPauseButton;
     private ImageButton mStopButton;
 
+    //Various variables related to the run
     double mDistance = 0;
     String mDuration;
     double mSpeed = 0;
     String mDate;
-    double mLongitude = 0;
-    double mLatitude = 0;
     String mAltitude;
     String mAvgSpeed;
-
-    int counter = 0;
-    int seconds = 0;
 
     //Google's API for location service
     private FusedLocationProviderClient fusedLocationClient;
@@ -115,7 +95,6 @@ public class RecordRunActivity extends AppCompatActivity{
         mPauseButton.setOnClickListener(view -> {
             pauseTracking();
         });
-
     }
 
     private void checkLocationPermission() {
@@ -127,7 +106,9 @@ public class RecordRunActivity extends AppCompatActivity{
                 @Override
                 public void onSuccess(Location location) {
                     //permission granted and ready to use
-                    serviceBind();
+                    if(!isBound){
+                        serviceBind();
+                    }
                 }
             });
         }
@@ -140,15 +121,15 @@ public class RecordRunActivity extends AppCompatActivity{
     }
 
     private void serviceBind() {
-        Intent intent = new Intent(RecordRunActivity.this, LocationService.class);
-        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+        serviceIntent = new Intent(RecordRunActivity.this, LocationService.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, serviceConnection, BIND_AUTO_CREATE);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = (LocationService.MyLocalBinder) binder;
-            //locationService = service.getBoundService();
             handler = new Handler();
             isBound = true;
 
@@ -207,19 +188,30 @@ public class RecordRunActivity extends AppCompatActivity{
                         intent.putExtra("speed", mAvgSpeed);
                         intent.putExtra("date", mDate);
                         setResult(RUN_RESULT_CODE, intent);
+                        isBound = false;
+                        stopService(serviceIntent);
                         RecordRunActivity.super.onBackPressed();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // CANCEL
-                        mRunViewModel.DeleteAll();
-
+                        // Do nothing if user cancels;
                     }
                 });
 
         // Create the AlertDialog object and return it
         builder.create().show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        isBound = false;
+        if(serviceConnection != null){
+            unbindService(serviceConnection);
+            serviceConnection = null;
+        }
     }
 
     private void widgetInit() {
