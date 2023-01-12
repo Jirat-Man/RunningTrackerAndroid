@@ -80,39 +80,34 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
         //mRecordRunButton button listener
         mDoneButton.setOnClickListener(view -> {
-            getRunRating();
-            getRunComment();
-            getRunImage();
-            if(getIntent().hasExtra("distance_from_record")){
-                storeInRoomDatabase();
-            }
-            else if(getIntent().hasExtra(EXTRA_ID)){
-                updateRoomDatabase();
-            }
+            storeRunData();
             WorkoutSummaryActivity.super.onBackPressed();
         });
     }
 
-    //Handle the event where the back button is pressed
-    //save and store all the data inside the room database
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    private void storeRunData() {
         getRunRating();
         getRunComment();
         getRunImage();
         if(getIntent().hasExtra("distance_from_record")){
             storeInRoomDatabase();
         }
-        else{
+        else if(getIntent().hasExtra(EXTRA_ID)){
             updateRoomDatabase();
         }
+    }
+
+    //Handle the event where the activity is destroyed
+    //save and store all the data inside the room database
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        storeRunData();
     }
 
     private void updateRoomDatabase() {
         RunEntity run = new RunEntity(mDuration, mDistance,
                 mSpeed,mDate, mNumberOfStars, mRunComment,null);
-        //Log.d("HELLPPPP", mDuration+mDistance+mSpeed+mDate);
         run.setId(id);
         mRunViewModel.Update(run);
     }
@@ -159,4 +154,6 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         mRunRatingBar = findViewById(R.id.ratingBar);
         mRunCommentEditText = findViewById(R.id.editText);
     }
+
+
 }
