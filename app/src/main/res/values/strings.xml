@@ -41,4 +41,6 @@
     <string name="upload_image_text">Upload Image</string>
     <string name="tracking_paused">Tracking paused</string>
     <string name="min_km">min/km</string>
+    <string name="tracking_run_text">Tracking Run</string>
+    <string name="keep_running">Keep running, you got this!</string>
 </resources>

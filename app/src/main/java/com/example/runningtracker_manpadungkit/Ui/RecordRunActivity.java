@@ -5,14 +5,19 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_FROM_RECORD;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SECONDS;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
+import static com.example.runningtracker_manpadungkit.Constants.NOTIFICATION_ID;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;

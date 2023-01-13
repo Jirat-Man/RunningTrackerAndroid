@@ -2,22 +2,32 @@ package com.example.runningtracker_manpadungkit.Service;
 
 
 
+import static com.example.runningtracker_manpadungkit.Constants.CHANNEL_ID;
 import static com.example.runningtracker_manpadungkit.Constants.INTERVAL_MILLIS;
+import static com.example.runningtracker_manpadungkit.Constants.NOTIFICATION_ID;
 import static org.chromium.base.ThreadUtils.runOnUiThread;
 import static java.lang.String.valueOf;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import com.example.runningtracker_manpadungkit.R;
+import com.example.runningtracker_manpadungkit.Ui.RecordRunActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -71,6 +81,8 @@ public class LocationService extends Service {
     public void onCreate() {
 
         startTimer();
+
+        Notify();
 
         LocationRequest locationRequest = new
                 LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).build();
@@ -225,11 +237,42 @@ public class LocationService extends Service {
         this.pauseTime = false;
     }
 
+
     @Override
     public void onDestroy() {
         resetLocation();
+        deleteNotification(getApplicationContext(), NOTIFICATION_ID);
         super.onDestroy();
     }
+
+    //create notification channel
+    private void Notify() {
+        createNotificationChannel();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.running_man)
+                .setContentTitle("Tracking in progress")
+                .setContentText("you got this, keep running!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        managerCompat.notify(NOTIFICATION_ID,builder.build());
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+
+            manager.createNotificationChannel(channel);
+        }
+    }
+
+    //delete notification
+    public static void deleteNotification(Context ctx, int notifyId) {
+        NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(notifyId);
+    }
+
 
     //return service to activity, bind service to activity
     public class MyLocalBinder extends Binder {
