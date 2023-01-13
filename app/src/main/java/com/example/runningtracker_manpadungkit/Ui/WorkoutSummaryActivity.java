@@ -199,7 +199,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         //distance is in km so have to *1000
         double distance = tempDist*1000;
         double AvgSpeed = distance/mSeconds;
-        mSpeed = String.valueOf((1000/AvgSpeed)/60);
+        mSpeed = String.valueOf(Math.round(((1000/AvgSpeed)/60)* 100d)/100d);
         Toast.makeText(this, mSpeed, Toast.LENGTH_SHORT).show();
         if(distance == 0){
             mSpeed = String.valueOf(0);

@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/runDuration"
             android:layout_alignParentEnd="true"
-            android:text="@string/m_s"
+            android:text="@string/min_km"
             android:textColor="@color/white" />
 
         <TextView
