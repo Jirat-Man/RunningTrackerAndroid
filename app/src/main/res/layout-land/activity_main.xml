@@ -42,8 +42,7 @@
             <WebView
                 android:id="@+id/gifTracking"
                 android:layout_width="117dp"
-                android:layout_height="116dp"
-                android:visibility="invisible" />
+                android:layout_height="116dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +80,6 @@
                 android:text="@string/press_to_start"
                 android:textAlignment="center"
                 android:textColor="@color/neonGreen"
-
                 android:textSize="16sp" />
 
             <TextView
@@ -92,8 +90,7 @@
                 android:text="@string/tracking_in_progress"
                 android:textAlignment="center"
                 android:textColor="@color/neonGreen"
-                android:textSize="16sp"
-                android:visibility="invisible" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/trackingOnPause"
@@ -103,8 +100,7 @@
                 android:text="@string/tracking_paused"
                 android:textAlignment="center"
                 android:textColor="@color/neonGreen"
-                android:textSize="16sp"
-                android:visibility="invisible" />
+                android:textSize="16sp" />
 
         </FrameLayout>
 

@@ -29,6 +29,7 @@ import android.os.Bundle;
 import com.example.runningtracker_manpadungkit.R;
 import com.example.runningtracker_manpadungkit.RunViewModel;
 
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -65,34 +66,17 @@ public class MainActivity extends AppCompatActivity {
                      mDuration = resultIntent.getStringExtra(EXTRA_DURATION);
                      mSpeed = resultIntent.getStringExtra(EXTRA_SPEED);
                      mDate = resultIntent.getStringExtra(EXTRA_DATE);
+
+                     Intent intent = new Intent(MainActivity.this, WorkoutSummaryActivity.class);
+                     intent.putExtra(EXTRA_DURATION_FROM_RECORD, mDistance);
+                     intent.putExtra(EXTRA_DURATION, mDuration);
+                     intent.putExtra(EXTRA_SPEED, mSpeed);
+                     intent.putExtra(EXTRA_DATE, mDate);
+                     startActivity(intent);
                  }
-                 Intent intent = new Intent(MainActivity.this, WorkoutSummaryActivity.class);
-                 intent.putExtra(EXTRA_DURATION_FROM_RECORD, mDistance);
-                 intent.putExtra(EXTRA_DURATION, mDuration);
-                 intent.putExtra(EXTRA_SPEED, mSpeed);
-                 intent.putExtra(EXTRA_DATE, mDate);
-                 startActivity(intent);
-
-                 //set gif and text as invisible when tracking is finished
-                 tracking = false;
-                 mGifTracking.setVisibility(View.INVISIBLE);
-                 mPressToStartTextView.setVisibility(View.VISIBLE);
-                 mInProgressTextview.setVisibility(View.INVISIBLE);
-                 mOnPauseTextView.setVisibility(View.INVISIBLE);
              }
-
-            if(onPause){
-                mGifTracking.setVisibility(View.VISIBLE);
-                mPressToStartTextView.setVisibility(View.INVISIBLE);
-                mInProgressTextview.setVisibility(View.INVISIBLE);
-                mOnPauseTextView.setVisibility(View.VISIBLE);
-            }
-            if(tracking){
-                mGifTracking.setVisibility(View.VISIBLE);
-                mPressToStartTextView.setVisibility(View.INVISIBLE);
-                mInProgressTextview.setVisibility(View.VISIBLE);
-                mOnPauseTextView.setVisibility(View.INVISIBLE);
-            }
+            //set gif and text visibility
+            handleViewVisibility();
         }
     });
 
@@ -115,32 +99,13 @@ public class MainActivity extends AppCompatActivity {
         //url of gif
         mGifTracking.loadUrl(file);
 
-        if(onPause){
-            mGifTracking.setVisibility(View.VISIBLE);
-            mPressToStartTextView.setVisibility(View.INVISIBLE);
-            mInProgressTextview.setVisibility(View.INVISIBLE);
-            mOnPauseTextView.setVisibility(View.VISIBLE);
-        }
-        if(tracking){
-            mGifTracking.setVisibility(View.VISIBLE);
-            mPressToStartTextView.setVisibility(View.INVISIBLE);
-            mInProgressTextview.setVisibility(View.VISIBLE);
-            mOnPauseTextView.setVisibility(View.INVISIBLE);
-        }
-
-
+        handleViewVisibility();
 
         //mRecordRunButton button listener
         mRecordRunButton.setOnClickListener(view -> {
             Intent journey = new Intent(MainActivity.this, RecordRunActivity.class);
             startForResult.launch(journey);
-            mGifTracking.setVisibility(View.VISIBLE);
-            mPressToStartTextView.setVisibility(View.INVISIBLE);
-            if(!onPause){
-                mInProgressTextview.setVisibility(View.VISIBLE);
-                mOnPauseTextView.setVisibility(View.INVISIBLE);
-                tracking = true;
-            }
+            tracking = true;
         });
 
         mAnalyticsButton.setOnClickListener(view -> {
@@ -151,6 +116,34 @@ public class MainActivity extends AppCompatActivity {
         askForLocationPermission();
 
     }
+
+    private void handleViewVisibility() {
+        if(onPause && tracking){
+            //Tracking Paused
+            mGifTracking.setVisibility(View.VISIBLE);
+            mPressToStartTextView.setVisibility(View.INVISIBLE);
+            mInProgressTextview.setVisibility(View.INVISIBLE);
+            mOnPauseTextView.setVisibility(View.VISIBLE);
+            Log.d("EEEE", "1");
+        }
+        if(tracking && !onPause){
+            //Tracking is in progress
+            mGifTracking.setVisibility(View.VISIBLE);
+            mPressToStartTextView.setVisibility(View.INVISIBLE);
+            mInProgressTextview.setVisibility(View.VISIBLE);
+            mOnPauseTextView.setVisibility(View.INVISIBLE);
+            Log.d("EEEE", "2");
+        }
+        if(!tracking && !onPause){
+            //No tracking started
+            mGifTracking.setVisibility(View.INVISIBLE);
+            mPressToStartTextView.setVisibility(View.VISIBLE);
+            mInProgressTextview.setVisibility(View.INVISIBLE);
+            mOnPauseTextView.setVisibility(View.INVISIBLE);
+            Log.d("EEEE", "3");
+        }
+    }
+
     public static class PermissionNotGrantedDialog extends DialogFragment {
         public static PermissionNotGrantedDialog newInstance() {
             PermissionNotGrantedDialog dialog = new PermissionNotGrantedDialog();

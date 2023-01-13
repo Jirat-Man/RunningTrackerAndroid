@@ -103,7 +103,6 @@ public class RecordRunActivity extends AppCompatActivity{
 
         mPauseButton.setOnClickListener(view -> {
             onPause = !onPause;
-            tracking = !tracking;
             if(onPause){
                 Toast.makeText(this, "tracking paused", Toast.LENGTH_SHORT).show();
                 mPauseButton.setImageResource(R.drawable.play_button);
@@ -216,6 +215,8 @@ public class RecordRunActivity extends AppCompatActivity{
                         intent.putExtra(EXTRA_DATE, mStartTime);
                         setResult(RUN_RESULT_CODE, intent);
                         isBound = false;
+                        tracking = false;
+                        onPause = false;
                         stopService(serviceIntent);
                         RecordRunActivity.super.onBackPressed();
                     }

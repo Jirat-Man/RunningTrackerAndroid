@@ -104,9 +104,6 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
-        //tell the application that tracking is done and not on paused
-        tracking = false;
-        onPause = false;
 
         //initialise all Views
         widgetInit();
@@ -185,7 +182,6 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     private void storeRunData() {
         getRunRating();
         getRunComment();
-        getRunImage();
         if(getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)){
             storeInRoomDatabase();
         }
@@ -212,9 +208,6 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         RunEntity run = new RunEntity(mDuration, mDistance,
                 mSpeed,mDate, mNumberOfStars, mRunComment, imageByte);
         mRunViewModel.Insert(run);
-    }
-    private void getRunImage() {
-       //path = getImageFilePath(getApplicationContext(), mImageView.getU);
     }
 
     private void getRunComment() {

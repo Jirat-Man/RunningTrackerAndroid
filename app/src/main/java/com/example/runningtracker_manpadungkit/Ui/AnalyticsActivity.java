@@ -51,9 +51,6 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             @Override
             public void onActivityResult(ActivityResult result) {
-                if(result != null && result.getResultCode() == EDIT_RUN_REQUEST){
-
-                }
             }
         });
 
