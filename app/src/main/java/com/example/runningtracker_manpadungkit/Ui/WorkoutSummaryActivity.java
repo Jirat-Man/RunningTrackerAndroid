@@ -100,14 +100,6 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     //Handle the event where the activity is destroyed
     //save and store all the data inside the room database
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        storeRunData();
-    }
-
-
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         storeRunData();

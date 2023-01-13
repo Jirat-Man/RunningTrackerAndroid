@@ -35,13 +35,16 @@
 
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="67dp" />
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/gifTracking"
+                android:layout_width="109dp"
+                android:layout_height="114dp"
+                android:src="@drawable/pulsating_green"
+                android:visibility="invisible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -75,51 +78,25 @@
                 android:id="@+id/pressToStart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/press_to_start"
                 android:textAlignment="center"
                 android:textColor="@color/neonGreen"
-                android:textSize="16sp"
-                tools:ignore="RtlCompat" />
+
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/trackingInProgress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/tracking_in_progress"
                 android:textAlignment="center"
                 android:textColor="@color/neonGreen"
                 android:textSize="16sp"
-                android:visibility="invisible"
-                tools:ignore="RtlCompat" />
-
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <pl.droidsonroids.gif.GifImageView
-                android:id="@+id/gifTracking"
-                android:layout_width="109dp"
-                android:layout_height="114dp"
-                android:src="@drawable/pulsating_green"
                 android:visibility="invisible" />
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </LinearLayout>
+        </FrameLayout>
 
     </LinearLayout>
 

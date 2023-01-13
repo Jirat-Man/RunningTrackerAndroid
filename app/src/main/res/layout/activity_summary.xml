@@ -10,24 +10,41 @@
     tools:context=".Ui.WorkoutSummaryActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="372dp"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:text="@string/workout_summary"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="42sp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="372dp"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:text="@string/workout_summary"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="42sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayout2"
@@ -132,9 +149,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="143dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/ratingText"
                 android:textAlignment="center"
@@ -156,6 +179,11 @@
                 android:stepSize="0.5"
                 android:textAlignment="viewEnd"
                 android:textDirection="inherit" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
         </LinearLayout>
 
@@ -192,7 +220,7 @@
 
             <EditText
                 android:id="@+id/editText"
-                android:layout_width="326dp"
+                android:layout_width="307dp"
                 android:layout_height="69dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginBottom="4dp"
@@ -210,15 +238,30 @@
                 android:textColorLink="@color/white"
                 android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/doneButton"
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="41dp"
-                android:background="@drawable/green_round_edge"
-                android:text="@string/done"
-                tools:ignore="TouchTargetSizeCheck" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/doneButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/green_round_edge"
+                    android:text="@string/done"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
