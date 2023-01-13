@@ -11,9 +11,12 @@ import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
 import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.onPause;
 
 import android.content.Intent;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +31,12 @@ import com.example.runningtracker_manpadungkit.RunViewModel;
 public class WorkoutSummaryActivity extends AppCompatActivity {
 
     Button mDoneButton;
-    Button mBrowseButton;
+    Button mUploadButton;
     TextView mDistanceTextView;
     TextView mDurationTextView;
     TextView mDateTextView;
     TextView mSpeedTextView;
+    ImageView mImageView;
 
     EditText mRunCommentEditText;
     String mRunComment;
@@ -44,6 +48,8 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     String mDuration;
     String mDate;
     String mSpeed;
+    String path;
+    Uri uri;
     int id;
 
     RunViewModel mRunViewModel;
@@ -83,7 +89,8 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             //Toast.makeText(this, "here", Toast.LENGTH_SHORT).show();
             getRunResult();
         }
-        mBrowseButton.setOnClickListener(view -> {
+        mUploadButton.setOnClickListener(view -> {
+            //ImagePic
         });
 
         //mDoneButton button listener
@@ -154,13 +161,14 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
     private void widgetInit() {
         mDoneButton = findViewById(R.id.doneButton);
-        mBrowseButton = findViewById(R.id.uploadImageButton);
+        mUploadButton = findViewById(R.id.uploadImageButton);
         mDistanceTextView = findViewById(R.id.runDistance);
         mDurationTextView = findViewById(R.id.runDuration);
         mDateTextView = findViewById(R.id.runDate);
         mSpeedTextView = findViewById(R.id.runSpeed);
         mRunRatingBar = findViewById(R.id.ratingBar);
         mRunCommentEditText = findViewById(R.id.editText);
+        mImageView = findViewById(R.id.imageView);
     }
 
 

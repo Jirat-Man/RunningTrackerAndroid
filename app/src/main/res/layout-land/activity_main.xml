@@ -37,13 +37,12 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <pl.droidsonroids.gif.GifImageView
+            <WebView
                 android:id="@+id/gifTracking"
-                android:layout_width="109dp"
-                android:layout_height="114dp"
-                android:src="@drawable/pulsating_green"
+                android:layout_width="117dp"
+                android:layout_height="116dp"
                 android:visibility="invisible" />
 
             <LinearLayout

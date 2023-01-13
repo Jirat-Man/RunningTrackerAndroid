@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -25,18 +26,18 @@ import com.example.runningtracker_manpadungkit.R;
 import com.example.runningtracker_manpadungkit.RunViewModel;
 
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity {
 
     private RunViewModel mRunViewModel;
     ImageButton mRecordRunButton;
     ImageButton mAnalyticsButton;
-    GifImageView mGifTracking;
+    WebView mGifTracking;
     TextView mPressToStartTextView;
     TextView mInProgressTextview;
     TextView mOnPauseTextView;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
         mPressToStartTextView = findViewById(R.id.pressToStart);
         mInProgressTextview = findViewById(R.id.trackingInProgress);
         mOnPauseTextView = findViewById(R.id.trackingOnPause);
+
+        mGifTracking.getSettings().setJavaScriptEnabled(true);
+        mGifTracking.setWebViewClient(new WebViewClient());
+        String file = "file:android_asset/gif_tracking.gif";
+        //url of gif
+        mGifTracking.loadUrl(file);
 
         if(onPause){
             mGifTracking.setVisibility(View.VISIBLE);
