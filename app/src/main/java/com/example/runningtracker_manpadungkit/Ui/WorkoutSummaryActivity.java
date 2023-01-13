@@ -126,7 +126,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             byte[] byteArray = getIntent().getByteArrayExtra(EXTRA_IMAGE);
             Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
             mImageView.setImageBitmap(compressedBitmap);
-    
+
             imageByte = getIntent().getByteArrayExtra(EXTRA_IMAGE);
             mDistance = getIntent().getStringExtra(EXTRA_DISTANCE) ;
             mDuration = getIntent().getStringExtra(EXTRA_DURATION);
