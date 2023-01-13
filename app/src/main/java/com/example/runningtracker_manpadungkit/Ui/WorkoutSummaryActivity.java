@@ -7,6 +7,8 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_ID;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_RATING;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
+import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
+import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.onPause;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -52,6 +54,11 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
+        //tell the application that tracking is done and not on paused
+        tracking = false;
+        onPause = false;
+
+        //initialise all Views
         widgetInit();
 
         //initialise ViewModel

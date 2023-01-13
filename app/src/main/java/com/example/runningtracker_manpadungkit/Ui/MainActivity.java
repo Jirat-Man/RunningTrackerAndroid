@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     GifImageView mGifTracking;
     TextView mPressToStartTextView;
     TextView mInProgressTextview;
+    TextView mOnPauseTextView;
 
     String mDistance;
     String mDuration;
@@ -72,7 +73,21 @@ public class MainActivity extends AppCompatActivity {
                  mGifTracking.setVisibility(View.INVISIBLE);
                  mPressToStartTextView.setVisibility(View.VISIBLE);
                  mInProgressTextview.setVisibility(View.INVISIBLE);
+                 mOnPauseTextView.setVisibility(View.INVISIBLE);
              }
+
+            if(onPause){
+                mGifTracking.setVisibility(View.VISIBLE);
+                mPressToStartTextView.setVisibility(View.INVISIBLE);
+                mInProgressTextview.setVisibility(View.INVISIBLE);
+                mOnPauseTextView.setVisibility(View.VISIBLE);
+            }
+            if(tracking){
+                mGifTracking.setVisibility(View.VISIBLE);
+                mPressToStartTextView.setVisibility(View.INVISIBLE);
+                mInProgressTextview.setVisibility(View.VISIBLE);
+                mOnPauseTextView.setVisibility(View.INVISIBLE);
+            }
         }
     });
 
@@ -86,18 +101,22 @@ public class MainActivity extends AppCompatActivity {
         mGifTracking = findViewById(R.id.gifTracking);
         mPressToStartTextView = findViewById(R.id.pressToStart);
         mInProgressTextview = findViewById(R.id.trackingInProgress);
+        mOnPauseTextView = findViewById(R.id.trackingOnPause);
 
-
+        if(onPause){
+            mGifTracking.setVisibility(View.VISIBLE);
+            mPressToStartTextView.setVisibility(View.INVISIBLE);
+            mInProgressTextview.setVisibility(View.INVISIBLE);
+            mOnPauseTextView.setVisibility(View.VISIBLE);
+        }
         if(tracking){
             mGifTracking.setVisibility(View.VISIBLE);
             mPressToStartTextView.setVisibility(View.INVISIBLE);
             mInProgressTextview.setVisibility(View.VISIBLE);
+            mOnPauseTextView.setVisibility(View.INVISIBLE);
         }
-        else{
-            mGifTracking.setVisibility(View.INVISIBLE);
-            mPressToStartTextView.setVisibility(View.VISIBLE);
-            mInProgressTextview.setVisibility(View.INVISIBLE);
-        }
+
+
 
         //mRecordRunButton button listener
         mRecordRunButton.setOnClickListener(view -> {
@@ -105,8 +124,11 @@ public class MainActivity extends AppCompatActivity {
             startForResult.launch(journey);
             mGifTracking.setVisibility(View.VISIBLE);
             mPressToStartTextView.setVisibility(View.INVISIBLE);
-            mInProgressTextview.setVisibility(View.VISIBLE);
-            tracking = true;
+            if(!onPause){
+                mInProgressTextview.setVisibility(View.VISIBLE);
+                mOnPauseTextView.setVisibility(View.INVISIBLE);
+                tracking = true;
+            }
         });
 
         mAnalyticsButton.setOnClickListener(view -> {

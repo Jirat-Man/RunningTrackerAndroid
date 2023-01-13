@@ -1,6 +1,7 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
+import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -96,6 +97,7 @@ public class RecordRunActivity extends AppCompatActivity{
 
         mPauseButton.setOnClickListener(view -> {
             onPause = !onPause;
+            tracking = !tracking;
             if(onPause){
                 Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
                 mPauseButton.setImageResource(R.drawable.play_button);
