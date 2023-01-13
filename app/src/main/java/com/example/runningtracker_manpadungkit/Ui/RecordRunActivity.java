@@ -40,6 +40,7 @@ public class RecordRunActivity extends AppCompatActivity{
     Intent serviceIntent;
     //Boolean to check if there is any service binded to the activity
     boolean isBound = false;
+    static boolean onPause = false;
 
     //All the textview in the activity
     private TextView mDistanceTextView;
@@ -92,10 +93,23 @@ public class RecordRunActivity extends AppCompatActivity{
             stopButtonDialogConfirmation();
         });
 
+
         mPauseButton.setOnClickListener(view -> {
-            pauseTracking();
+            onPause = !onPause;
+            if(onPause){
+                Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
+                mPauseButton.setImageResource(R.drawable.play_button);
+                pauseTracking();
+            }
+            else{
+                Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
+                mPauseButton.setImageResource(R.drawable.pause_button);
+                continueTracking();
+            }
         });
     }
+
+
 
     private void checkLocationPermission() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -172,9 +186,11 @@ public class RecordRunActivity extends AppCompatActivity{
     };
 
     private void pauseTracking() {
-
+        service.pauseTracking();
     }
-
+    private void continueTracking() {
+        service.continueTracking();
+    }
     //brings up a dialog asking for confirmation from the user that they want to stop the run
     private void stopButtonDialogConfirmation() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -222,5 +238,12 @@ public class RecordRunActivity extends AppCompatActivity{
         mPauseButton = findViewById(R.id.pauseButton);
         mStopButton = findViewById(R.id.stopButton);
         mDateTextView = findViewById(R.id.date);
+
+        if(onPause){
+            mPauseButton.setImageResource(R.drawable.play_button);
+        }
+        else{
+            mPauseButton.setImageResource(R.drawable.pause_button);
+        }
     }
 }

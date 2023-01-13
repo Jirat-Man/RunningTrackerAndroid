@@ -2,6 +2,7 @@ package com.example.runningtracker_manpadungkit.Ui;
 
 import static com.example.runningtracker_manpadungkit.Constants.PERMISSION_GPS_CODE;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
+import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.onPause;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         mGifTracking = findViewById(R.id.gifTracking);
         mPressToStartTextView = findViewById(R.id.pressToStart);
         mInProgressTextview = findViewById(R.id.trackingInProgress);
+
 
         if(tracking){
             mGifTracking.setVisibility(View.VISIBLE);

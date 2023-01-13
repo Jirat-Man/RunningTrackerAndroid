@@ -96,6 +96,17 @@
                 android:textSize="16sp"
                 android:visibility="invisible" />
 
+            <TextView
+                android:id="@+id/trackingOnPause"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/tracking_paused"
+                android:textAlignment="center"
+                android:textColor="@color/neonGreen"
+                android:textSize="16sp"
+                android:visibility="invisible" />
+
         </FrameLayout>
 
     </LinearLayout>

@@ -12,29 +12,23 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Binder;
-import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.example.runningtracker_manpadungkit.Ui.RecordRunActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executor;
 
 public class LocationService extends Service {
 
@@ -59,6 +53,7 @@ public class LocationService extends Service {
     double mAvgSpeed = 0;
     int seconds = 0;
     int counter = 0;
+    Boolean pauseTime = false;
 
     private Calendar calendar;
     private SimpleDateFormat dateFormat;
@@ -87,8 +82,14 @@ public class LocationService extends Service {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                for (Location location : locationResult.getLocations()) {
-                    updateData(location);
+                if(!pauseTime){
+                    for (Location location : locationResult.getLocations()) {
+                        updateData(location);
+                    }
+                }
+                else{
+                    //reset location for when tracking is paused
+                    counter = 0;
                 }
             }
         };
@@ -121,19 +122,19 @@ public class LocationService extends Service {
             @Override
             public void run()
             {
-                mTime++;
-                mDuration = getTimerText();
+                if(!pauseTime) {
+                    mTime++;
+                    mDuration = getTimerText();
+                }
             }
         };
         mTimer.scheduleAtFixedRate(mTimerTask, 0 ,1000);
     }
 
 
-
     private String getTimerText()
     {
         int rounded = (int) Math.round(mTime);
-
         int seconds = ((rounded % 86400) % 3600) % 60;
         int minutes = ((rounded % 86400) % 3600) / 60;
         int hours = ((rounded % 86400) / 3600);
@@ -160,7 +161,7 @@ public class LocationService extends Service {
             if(location.hasAltitude()){
                 mAltitude = location.getAltitude();
             }
-            // if not put "Not Available"
+            // if not put "-404"
             else{
                 mAltitude = -404;
             }
@@ -173,7 +174,7 @@ public class LocationService extends Service {
                 Log.d("avg", String.valueOf(mAvgSpeed));
                 Log.d("seconds", String.valueOf(seconds));
             }
-            // if not put "Not Available"
+            // if not put "404"
             else{
                 mAvgSpeed = -404;
             }
@@ -218,6 +219,13 @@ public class LocationService extends Service {
         mLongitude = 0;
     }
 
+    public void pauseTracking(){
+        this.pauseTime = true;
+    }
+    public void continueTracking(){
+        this.pauseTime = false;
+    }
+
     @Override
     public void onDestroy() {
         resetLocation();
@@ -246,6 +254,8 @@ public class LocationService extends Service {
         public void resetLocation(){
             LocationService.this.resetLocation();
         }
+        public void pauseTracking(){LocationService.this.pauseTracking();}
+        public void continueTracking(){LocationService.this.continueTracking();}
     }
 
 }

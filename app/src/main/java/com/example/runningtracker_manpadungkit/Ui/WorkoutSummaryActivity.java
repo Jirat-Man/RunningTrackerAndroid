@@ -81,6 +81,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
         //mDoneButton button listener
         mDoneButton.setOnClickListener(view -> {
+            storeRunData();
             WorkoutSummaryActivity.super.onBackPressed();
         });
     }
@@ -97,11 +98,11 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         }
     }
 
-    //Handle the event where the activity is destroyed
+    //Handle the event where users click black button instead of "done"
     //save and store all the data inside the room database
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onBackPressed() {
+        super.onBackPressed();
         storeRunData();
     }
 
