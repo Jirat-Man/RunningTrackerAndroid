@@ -40,4 +40,5 @@
     <string name="delete_all_run_history">Delete all run history</string>
     <string name="upload_image_text">Upload Image</string>
     <string name="tracking_paused">Tracking paused</string>
+    <string name="min_km">min/km</string>
 </resources>

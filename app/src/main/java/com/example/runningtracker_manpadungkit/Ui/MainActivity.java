@@ -3,6 +3,7 @@ package com.example.runningtracker_manpadungkit.Ui;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_FROM_RECORD;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SECONDS;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.PERMISSION_GPS_CODE;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     String mDuration;
     String mSpeed;
     String mDate;
+    int mSeconds;
     public static Boolean tracking = false;
 
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -66,12 +68,14 @@ public class MainActivity extends AppCompatActivity {
                      mDuration = resultIntent.getStringExtra(EXTRA_DURATION);
                      mSpeed = resultIntent.getStringExtra(EXTRA_SPEED);
                      mDate = resultIntent.getStringExtra(EXTRA_DATE);
+                     mSeconds = resultIntent.getIntExtra(EXTRA_SECONDS, 0);
 
                      Intent intent = new Intent(MainActivity.this, WorkoutSummaryActivity.class);
                      intent.putExtra(EXTRA_DURATION_FROM_RECORD, mDistance);
                      intent.putExtra(EXTRA_DURATION, mDuration);
                      intent.putExtra(EXTRA_SPEED, mSpeed);
                      intent.putExtra(EXTRA_DATE, mDate);
+                     intent.putExtra(EXTRA_SECONDS, mSeconds);
                      startActivity(intent);
                  }
              }

@@ -138,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/runDate"
                 android:layout_toEndOf="@id/runSpeed"
-                android:text="@string/m_s"
+                android:text="@string/min_km"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 

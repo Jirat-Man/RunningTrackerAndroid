@@ -18,4 +18,5 @@ public final class Constants {
     public static final String EXTRA_ID = "extra_id";
     public static final String EXTRA_IMAGE = "extra_image";
     public static final String EXTRA_DURATION_FROM_RECORD = "extra_duration_from_record";
+    public static final String EXTRA_SECONDS = "extra_seconds";
 }

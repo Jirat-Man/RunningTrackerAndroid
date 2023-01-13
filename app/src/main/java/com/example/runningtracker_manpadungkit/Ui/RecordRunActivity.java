@@ -3,6 +3,7 @@ package com.example.runningtracker_manpadungkit.Ui;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_FROM_RECORD;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SECONDS;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
@@ -66,7 +67,7 @@ public class RecordRunActivity extends AppCompatActivity{
     String mStartTime;
     String mAltitude;
     String mAvgSpeed;
-    int counter = 0;
+    int mSeconds = -1;
 
     //Google's API for location service
     private FusedLocationProviderClient fusedLocationClient;
@@ -158,7 +159,7 @@ public class RecordRunActivity extends AppCompatActivity{
                 @Override
                 public void run() {
                     while (service != null) {
-                        if(counter == 0){
+                        if(mSeconds == 0){
                             mStartTime = service.getDate();
                         }
                         mDistance = service.getDistance();
@@ -167,7 +168,7 @@ public class RecordRunActivity extends AppCompatActivity{
                         mDate = service.getDate();
                         mAltitude = service.getAltitude();
                         mAvgSpeed = String.valueOf(service.getAvgSpeed());
-                        counter++;
+                        mSeconds++;
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -179,7 +180,7 @@ public class RecordRunActivity extends AppCompatActivity{
                             }
                         });
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(1000);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -213,6 +214,7 @@ public class RecordRunActivity extends AppCompatActivity{
                         intent.putExtra(EXTRA_DURATION, mDuration);
                         intent.putExtra(EXTRA_SPEED, mAvgSpeed);
                         intent.putExtra(EXTRA_DATE, mStartTime);
+                        intent.putExtra(EXTRA_SECONDS, mSeconds);
                         setResult(RUN_RESULT_CODE, intent);
                         isBound = false;
                         tracking = false;

@@ -8,6 +8,7 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_F
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_ID;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_IMAGE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_RATING;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SECONDS;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.IMAGE_PERMISSION_CODE;
 import static com.example.runningtracker_manpadungkit.Constants.IMAGE_PICKER_CODE;
@@ -26,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -70,7 +72,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     String mDuration;
     String mDate;
     String mSpeed;
-    String path;
+    int mSeconds;
     Uri uri;
     Bitmap bitmap;
     byte[] imageByte;
@@ -190,6 +192,21 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         }
     }
 
+    //get avg speed from distance/time
+    private void getAvgSpeed(){
+        double tempDist = Double.parseDouble(mDistance);
+
+        //distance is in km so have to *1000
+        double distance = tempDist*1000;
+        double AvgSpeed = distance/mSeconds;
+        mSpeed = String.valueOf((1000/AvgSpeed)/60);
+        Toast.makeText(this, mSpeed, Toast.LENGTH_SHORT).show();
+        if(distance == 0){
+            mSpeed = String.valueOf(0);
+        }
+    }
+
+
     //Handle the event where users click black button instead of "done"
     //save and store all the data inside the room database
     @Override
@@ -197,6 +214,8 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         super.onBackPressed();
         storeRunData();
     }
+
+
 
     private void updateRoomDatabase() {
         RunEntity run = new RunEntity(mDuration, mDistance,
@@ -220,15 +239,17 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
     private void getRunResult() {
         Intent intent = getIntent();
-        mDistanceTextView.setText(intent.getStringExtra(EXTRA_DURATION_FROM_RECORD));
-        mDurationTextView.setText(intent.getStringExtra(EXTRA_DURATION));
-        mDateTextView.setText(intent.getStringExtra(EXTRA_DATE));
-        mSpeedTextView.setText(intent.getStringExtra(EXTRA_SPEED));
-
         mDistance = intent.getStringExtra(EXTRA_DURATION_FROM_RECORD) ;
         mDuration = intent.getStringExtra(EXTRA_DURATION);
         mDate = intent.getStringExtra(EXTRA_DATE);
         mSpeed = intent.getStringExtra(EXTRA_SPEED);
+        mSeconds = intent.getIntExtra(EXTRA_SECONDS, 0);
+
+        mDistanceTextView.setText(intent.getStringExtra(EXTRA_DURATION_FROM_RECORD));
+        mDurationTextView.setText(intent.getStringExtra(EXTRA_DURATION));
+        mDateTextView.setText(intent.getStringExtra(EXTRA_DATE));
+        getAvgSpeed();
+        mSpeedTextView.setText(mSpeed);
     }
 
     private void widgetInit() {
