@@ -1,5 +1,9 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_FROM_RECORD;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
 
@@ -59,8 +63,10 @@ public class RecordRunActivity extends AppCompatActivity{
     String mDuration;
     double mSpeed = 0;
     String mDate;
+    String mStartTime;
     String mAltitude;
     String mAvgSpeed;
+    int counter = 0;
 
     //Google's API for location service
     private FusedLocationProviderClient fusedLocationClient;
@@ -99,12 +105,12 @@ public class RecordRunActivity extends AppCompatActivity{
             onPause = !onPause;
             tracking = !tracking;
             if(onPause){
-                Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "tracking paused", Toast.LENGTH_SHORT).show();
                 mPauseButton.setImageResource(R.drawable.play_button);
                 pauseTracking();
             }
             else{
-                Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "tracking resume", Toast.LENGTH_SHORT).show();
                 mPauseButton.setImageResource(R.drawable.pause_button);
                 continueTracking();
             }
@@ -153,13 +159,16 @@ public class RecordRunActivity extends AppCompatActivity{
                 @Override
                 public void run() {
                     while (service != null) {
+                        if(counter == 0){
+                            mStartTime = service.getDate();
+                        }
                         mDistance = service.getDistance();
                         mDuration = service.getDuration();
                         mSpeed = service.getSpeed();
                         mDate = service.getDate();
                         mAltitude = service.getAltitude();
                         mAvgSpeed = String.valueOf(service.getAvgSpeed());
-
+                        counter++;
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -201,10 +210,10 @@ public class RecordRunActivity extends AppCompatActivity{
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();
-                        intent.putExtra("distance_from_record", String.valueOf(mDistance));
-                        intent.putExtra("duration", mDuration);
-                        intent.putExtra("speed", mAvgSpeed);
-                        intent.putExtra("date", mDate);
+                        intent.putExtra(EXTRA_DURATION_FROM_RECORD, String.valueOf(mDistance));
+                        intent.putExtra(EXTRA_DURATION, mDuration);
+                        intent.putExtra(EXTRA_SPEED, mAvgSpeed);
+                        intent.putExtra(EXTRA_DATE, mStartTime);
                         setResult(RUN_RESULT_CODE, intent);
                         isBound = false;
                         stopService(serviceIntent);

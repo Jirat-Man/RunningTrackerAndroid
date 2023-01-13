@@ -1,5 +1,9 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_FROM_RECORD;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.PERMISSION_GPS_CODE;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.onPause;
@@ -57,16 +61,16 @@ public class MainActivity extends AppCompatActivity {
                  Intent resultIntent = result.getData();
 
                  if(resultIntent != null){
-                     mDistance = resultIntent.getStringExtra("distance_from_record");
-                     mDuration = resultIntent.getStringExtra("duration");
-                     mSpeed = resultIntent.getStringExtra("speed");
-                     mDate = resultIntent.getStringExtra("date");
+                     mDistance = resultIntent.getStringExtra(EXTRA_DURATION_FROM_RECORD);
+                     mDuration = resultIntent.getStringExtra(EXTRA_DURATION);
+                     mSpeed = resultIntent.getStringExtra(EXTRA_SPEED);
+                     mDate = resultIntent.getStringExtra(EXTRA_DATE);
                  }
                  Intent intent = new Intent(MainActivity.this, WorkoutSummaryActivity.class);
-                 intent.putExtra("distance_from_record", mDistance);
-                 intent.putExtra("duration", mDuration);
-                 intent.putExtra("speed", mSpeed);
-                 intent.putExtra("date", mDate);
+                 intent.putExtra(EXTRA_DURATION_FROM_RECORD, mDistance);
+                 intent.putExtra(EXTRA_DURATION, mDuration);
+                 intent.putExtra(EXTRA_SPEED, mSpeed);
+                 intent.putExtra(EXTRA_DATE, mDate);
                  startActivity(intent);
 
                  //set gif and text as invisible when tracking is finished

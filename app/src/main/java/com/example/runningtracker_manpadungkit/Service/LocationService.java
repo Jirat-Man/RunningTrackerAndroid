@@ -72,8 +72,6 @@ public class LocationService extends Service {
 
         startTimer();
 
-        setDate();
-
         LocationRequest locationRequest = new
                 LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).build();
 
@@ -122,6 +120,7 @@ public class LocationService extends Service {
             @Override
             public void run()
             {
+                setDate();
                 if(!pauseTime) {
                     mTime++;
                     mDuration = getTimerText();

@@ -4,6 +4,7 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_COMMENT;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DISTANCE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_FROM_RECORD;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_ID;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_IMAGE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_RATING;
@@ -123,9 +124,11 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             mRunCommentEditText.setText(getIntent().getStringExtra(EXTRA_COMMENT));
             Toast.makeText(this, getIntent().getStringExtra(EXTRA_IMAGE), Toast.LENGTH_SHORT).show();
 
-            byte[] byteArray = getIntent().getByteArrayExtra(EXTRA_IMAGE);
-            Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
-            mImageView.setImageBitmap(compressedBitmap);
+            if(getIntent().getByteArrayExtra(EXTRA_IMAGE) != null){
+                byte[] byteArray = getIntent().getByteArrayExtra(EXTRA_IMAGE);
+                Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+                mImageView.setImageBitmap(compressedBitmap);
+            }
 
             imageByte = getIntent().getByteArrayExtra(EXTRA_IMAGE);
             mDistance = getIntent().getStringExtra(EXTRA_DISTANCE) ;
@@ -133,7 +136,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             mDate = getIntent().getStringExtra(EXTRA_DATE);
             mSpeed = getIntent().getStringExtra(EXTRA_SPEED);
         }
-        else if(getIntent().hasExtra("distance_from_record")){
+        else if(getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)){
             getRunResult();
         }
         mUploadButton.setOnClickListener(view -> {
@@ -183,7 +186,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         getRunRating();
         getRunComment();
         getRunImage();
-        if(getIntent().hasExtra("distance_from_record")){
+        if(getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)){
             storeInRoomDatabase();
         }
         else if(getIntent().hasExtra(EXTRA_ID)){
@@ -224,15 +227,15 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
     private void getRunResult() {
         Intent intent = getIntent();
-        mDistanceTextView.setText(intent.getStringExtra("distance_from_record"));
-        mDurationTextView.setText(intent.getStringExtra("duration"));
-        mDateTextView.setText(intent.getStringExtra("date"));
-        mSpeedTextView.setText(intent.getStringExtra("speed"));
+        mDistanceTextView.setText(intent.getStringExtra(EXTRA_DURATION_FROM_RECORD));
+        mDurationTextView.setText(intent.getStringExtra(EXTRA_DURATION));
+        mDateTextView.setText(intent.getStringExtra(EXTRA_DATE));
+        mSpeedTextView.setText(intent.getStringExtra(EXTRA_SPEED));
 
-        mDistance = intent.getStringExtra("distance_from_record") ;
-        mDuration = intent.getStringExtra("duration");
-        mDate = intent.getStringExtra("date");
-        mSpeed = intent.getStringExtra("speed");
+        mDistance = intent.getStringExtra(EXTRA_DURATION_FROM_RECORD) ;
+        mDuration = intent.getStringExtra(EXTRA_DURATION);
+        mDate = intent.getStringExtra(EXTRA_DATE);
+        mSpeed = intent.getStringExtra(EXTRA_SPEED);
     }
 
     private void widgetInit() {
