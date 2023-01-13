@@ -1,10 +1,13 @@
 package com.example.runningtracker_manpadungkit.Room;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
 
 @Entity(tableName = "run_record")       //Name of table
 public class RunEntity {
@@ -29,13 +32,17 @@ public class RunEntity {
     private float rating;
     private String comment;
 
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    @ColumnInfo(name = "run_image")
     private byte[] image;
+
+
 
     //Setter for  Run Id
     public void setId(int id) {
         this.id = id;
     }
+
+
 
     //entity Constructor
     public RunEntity(String duration, String distance, String speed,String date, float rating, String comment, byte[] image) {

@@ -6,6 +6,7 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DISTANCE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_ID;
+import static com.example.runningtracker_manpadungkit.Constants.EXTRA_IMAGE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_RATING;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
@@ -121,6 +122,7 @@ public class AnalyticsActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_DATE, runEntity.getDate());
                 intent.putExtra(EXTRA_RATING, runEntity.getRating());
                 intent.putExtra(EXTRA_COMMENT, runEntity.getComment());
+                intent.putExtra(EXTRA_IMAGE, runEntity.getImage());
                 startForResult.launch(intent);
             }
         });
