@@ -45,7 +45,7 @@ public class LocationService extends Service {
     double mAvgSpeed = 0;
     int seconds = 0;
     int counter = 0;
-    Boolean pauseTime = false;
+    static Boolean pauseTime = false;
     Timer mTimer;
     TimerTask mTimerTask;
     double mTime = -1.0;
@@ -60,7 +60,10 @@ public class LocationService extends Service {
 
         startTimer();
 
-        Notify();
+        if(!pauseTime){
+            Notify();
+        }
+
 
         LocationRequest locationRequest = new
                 LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).build();
@@ -80,6 +83,7 @@ public class LocationService extends Service {
                     //reset location for when tracking is paused
                     counter = 0;
                 }
+                Log.d("servicee", String.valueOf(mSpeed));
             }
         };
         //Google's API for location service
@@ -142,7 +146,6 @@ public class LocationService extends Service {
 
         //Update all the textView with new location
         if (location != null) {
-
             mDistance = getDistance(location);
             mLongitude = location.getLongitude();
             mLatitude = location.getLatitude();
@@ -210,10 +213,10 @@ public class LocationService extends Service {
     }
 
     public void pauseTracking(){
-        this.pauseTime = true;
+        pauseTime = true;
     }
     public void continueTracking(){
-        this.pauseTime = false;
+        pauseTime = false;
     }
 
 
@@ -221,9 +224,9 @@ public class LocationService extends Service {
     public void onDestroy() {
         resetLocation();
         deleteNotification(getApplicationContext(), NOTIFICATION_ID);
-        stopSelf();
         super.onDestroy();
     }
+
 
     //create notification channel
     private void Notify() {

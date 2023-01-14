@@ -47,7 +47,7 @@ public class RecordRunActivity extends AppCompatActivity{
 
     private Handler handler;
 
-    private LocationService.MyLocalBinder service;
+    private LocationService.MyLocalBinder mLocalBinder;
 
     private ActivityRecordRunBinding mRecordRunBinding;
 
@@ -63,6 +63,7 @@ public class RecordRunActivity extends AppCompatActivity{
         mRecordRunBinding.stopButton.setOnClickListener(v -> stopButtonDialogConfirmation());
         mRecordRunBinding.pauseButton.setOnClickListener(v -> {
             onPause = !onPause;
+            tracking = !tracking;
             if(onPause){
                 Toast.makeText(RecordRunActivity.this, "Tracking paused", Toast.LENGTH_SHORT).show();
                 mRecordRunBinding.pauseButton.setImageResource(R.drawable.play_button);
@@ -77,7 +78,6 @@ public class RecordRunActivity extends AppCompatActivity{
     }
 
 
-
     private void checkLocationPermission() {
         //Google's API for location service
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -86,8 +86,9 @@ public class RecordRunActivity extends AppCompatActivity{
             //permission is granted
             fusedLocationClient.getLastLocation().addOnSuccessListener(RecordRunActivity.this, location -> {
                 //permission granted and ready to use
-                if(!isBound){
+                if(tracking){
                     serviceBind();
+                    tracking = !tracking;
                 }
             });
         }
@@ -108,21 +109,21 @@ public class RecordRunActivity extends AppCompatActivity{
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            service = (LocationService.MyLocalBinder) binder;
+            mLocalBinder = (LocationService.MyLocalBinder) binder;
             handler = new Handler();
             isBound = true;
 
             new Thread(() -> {
-                while (service != null) {
+                while (mLocalBinder != null) {
                     if(mSeconds == 0){
-                        mStartTime = service.getDate();
+                        mStartTime = mLocalBinder.getDate();
                     }
-                    mDistance = service.getDistance();
-                    mDuration = service.getDuration();
-                    mSpeed = service.getSpeed();
-                    mDate = service.getDate();
-                    mAltitude = service.getAltitude();
-                    mAvgSpeed = String.valueOf(service.getAvgSpeed());
+                    mDistance = mLocalBinder.getDistance();
+                    mDuration = mLocalBinder.getDuration();
+                    mSpeed = mLocalBinder.getSpeed();
+                    mDate = mLocalBinder.getDate();
+                    mAltitude = mLocalBinder.getAltitude();
+                    mAvgSpeed = String.valueOf(mLocalBinder.getAvgSpeed());
                     mSeconds++;
                     handler.post(() -> {
                         mRecordRunBinding.distance.setText(String.valueOf(mDistance));
@@ -142,17 +143,18 @@ public class RecordRunActivity extends AppCompatActivity{
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            service = null;
-            isBound = false;
+            mLocalBinder = null;
         }
     };
 
     private void pauseTracking() {
-        service.pauseTracking();
+        mLocalBinder.pauseTracking();
     }
+
     private void continueTracking() {
-        service.continueTracking();
+        mLocalBinder.continueTracking();
     }
+
     //brings up a dialog asking for confirmation from the user that they want to stop the run
     private void stopButtonDialogConfirmation() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -169,6 +171,10 @@ public class RecordRunActivity extends AppCompatActivity{
                     isBound = false;
                     tracking = false;
                     onPause = false;
+                    if(serviceConnection != null){
+                        unbindService(serviceConnection);
+                        serviceConnection = null;
+                    }
                     stopService(serviceIntent);
                     RecordRunActivity.super.onBackPressed();
                 })
@@ -182,13 +188,8 @@ public class RecordRunActivity extends AppCompatActivity{
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         isBound = false;
-        if(serviceConnection != null){
-            unbindService(serviceConnection);
-            serviceConnection = null;
-        }
+        super.onDestroy();
     }
 
     private void widgetInit() {
