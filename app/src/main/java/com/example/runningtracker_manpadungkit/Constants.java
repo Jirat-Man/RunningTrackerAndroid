@@ -22,4 +22,5 @@ public final class Constants {
 
     public static final String CHANNEL_ID = "CHANNEL_ID";
     public static final int NOTIFICATION_ID = 1;
+    public static final String SAVE_IMAGE_BYTE = "save_image_byte";
 }

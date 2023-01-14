@@ -12,6 +12,7 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SECONDS;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.IMAGE_PERMISSION_CODE;
 import static com.example.runningtracker_manpadungkit.Constants.IMAGE_PICKER_CODE;
+import static com.example.runningtracker_manpadungkit.Constants.SAVE_IMAGE_BYTE;
 import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
 import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.onPause;
 
@@ -85,7 +86,6 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     mSummaryBinding.imageView.setImageBitmap(bitmap);
-
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
                     imageByte = stream.toByteArray();
@@ -115,9 +115,8 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
                 byte[] byteArray = getIntent().getByteArrayExtra(EXTRA_IMAGE);
                 Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
                 mSummaryBinding.imageView.setImageBitmap(compressedBitmap);
-                Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
             }
-    
+
             imageByte = getIntent().getByteArrayExtra(EXTRA_IMAGE);
             mDistance = getIntent().getStringExtra(EXTRA_DISTANCE) ;
             mDuration = getIntent().getStringExtra(EXTRA_DURATION);
@@ -128,7 +127,11 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             getRunResult();
         }
 
+        if(savedInstanceState != null){
+            imageByte = savedInstanceState.getByteArray(SAVE_IMAGE_BYTE);
+        }
         if(imageByte != null){
+
             Bitmap compressedBitmap = BitmapFactory.decodeByteArray(imageByte,0,imageByte.length);
             mSummaryBinding.imageView.setImageBitmap(compressedBitmap);
         }
@@ -155,6 +158,17 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
                 WorkoutSummaryActivity.super.onBackPressed();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putByteArray(SAVE_IMAGE_BYTE, imageByte);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private void getImage() {
@@ -211,8 +225,8 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     //save and store all the data inside the room database
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         storeRunData();
+        super.onBackPressed();
     }
 
     private void updateRoomDatabase() {
