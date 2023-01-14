@@ -1,13 +1,7 @@
 package com.example.runningtracker_manpadungkit.Service;
-
-
-
 import static com.example.runningtracker_manpadungkit.Constants.CHANNEL_ID;
 import static com.example.runningtracker_manpadungkit.Constants.INTERVAL_MILLIS;
 import static com.example.runningtracker_manpadungkit.Constants.NOTIFICATION_ID;
-import static org.chromium.base.ThreadUtils.runOnUiThread;
-import static java.lang.String.valueOf;
-
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -17,24 +11,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Binder;
-import android.os.Build;
+
 import android.os.IBinder;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
 import com.example.runningtracker_manpadungkit.R;
-import com.example.runningtracker_manpadungkit.Ui.RecordRunActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -43,16 +33,7 @@ import java.util.TimerTask;
 
 public class LocationService extends Service {
 
-    private IBinder binder = new MyLocalBinder();
-
-    //Google's API for location service
-    private FusedLocationProviderClient fusedLocationClient;
-
-    //config file for all settings of FusedLocationProviderClient
-    private LocationRequest locationRequest;
-
-    //get location update every interval
-    private LocationCallback locationCallback;
+    private final IBinder binder = new MyLocalBinder();
 
     double mDistance = 0;
     String mDuration;
@@ -65,10 +46,6 @@ public class LocationService extends Service {
     int seconds = 0;
     int counter = 0;
     Boolean pauseTime = false;
-
-    private Calendar calendar;
-    private SimpleDateFormat dateFormat;
-    private String date;
     Timer mTimer;
     TimerTask mTimerTask;
     double mTime = -1.0;
@@ -89,22 +66,24 @@ public class LocationService extends Service {
                 LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).build();
 
         //called every interval
-        locationCallback = new LocationCallback() {
+        //reset location for when tracking is paused
+        //get location update every interval
+        LocationCallback locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                if(!pauseTime){
+                if (!pauseTime) {
                     for (Location location : locationResult.getLocations()) {
                         updateData(location);
                     }
-                }
-                else{
+                } else {
                     //reset location for when tracking is paused
                     counter = 0;
                 }
             }
         };
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //Google's API for location service
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -120,10 +99,9 @@ public class LocationService extends Service {
 
 
     private void setDate() {
-        calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("MM-dd-yyyy , HH:mm:ss");
-        date = dateFormat.format(calendar.getTime());
-        mDate = date;
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy , HH:mm:ss", Locale.ENGLISH);
+        mDate = dateFormat.format(calendar.getTime());
     }
 
     private void startTimer() {
@@ -243,6 +221,7 @@ public class LocationService extends Service {
     public void onDestroy() {
         resetLocation();
         deleteNotification(getApplicationContext(), NOTIFICATION_ID);
+        stopSelf();
         super.onDestroy();
     }
 
@@ -260,12 +239,10 @@ public class LocationService extends Service {
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = getSystemService(NotificationManager.class);
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager manager = getSystemService(NotificationManager.class);
 
-            manager.createNotificationChannel(channel);
-        }
+        manager.createNotificationChannel(channel);
     }
 
     //delete notification
@@ -277,9 +254,6 @@ public class LocationService extends Service {
 
     //return service to activity, bind service to activity
     public class MyLocalBinder extends Binder {
-        public LocationService getBoundService(){
-            return LocationService.this;
-        }
         public double getDistance(){
             return LocationService.this.mDistance;
         }
@@ -294,9 +268,6 @@ public class LocationService extends Service {
         }
         public String getDate(){return LocationService.this.mDate;}
         public String getAltitude(){return String.valueOf(LocationService.this.mAltitude);}
-        public void resetLocation(){
-            LocationService.this.resetLocation();
-        }
         public void pauseTracking(){LocationService.this.pauseTracking();}
         public void continueTracking(){LocationService.this.continueTracking();}
     }

@@ -1,5 +1,4 @@
 package com.example.runningtracker_manpadungkit.Ui;
-
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_FROM_RECORD;
@@ -8,7 +7,6 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.PERMISSION_GPS_CODE;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.onPause;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,22 +17,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
 import com.example.runningtracker_manpadungkit.R;
 import com.example.runningtracker_manpadungkit.databinding.ActivityMainBinding;
-
 import android.view.View;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,20 +80,14 @@ public class MainActivity extends AppCompatActivity {
 
         mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        mMainBinding.RecordRunButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent journey = new Intent(MainActivity.this, RecordRunActivity.class);
-                startForResult.launch(journey);
-                tracking = true;
-            }
+        mMainBinding.RecordRunButton.setOnClickListener(v -> {
+            Intent journey = new Intent(MainActivity.this, RecordRunActivity.class);
+            startForResult.launch(journey);
+            tracking = true;
         });
-        mMainBinding.analyseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent journey = new Intent(MainActivity.this, AnalyticsActivity.class);
-                startActivity(journey);
-            }
+        mMainBinding.analyseButton.setOnClickListener(v -> {
+            Intent journey = new Intent(MainActivity.this, AnalyticsActivity.class);
+            startActivity(journey);
         });
 
         mMainBinding.gifTracking.getSettings().setJavaScriptEnabled(true);
@@ -136,8 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class PermissionNotGrantedDialog extends DialogFragment {
         public static PermissionNotGrantedDialog newInstance() {
-            PermissionNotGrantedDialog dialog = new PermissionNotGrantedDialog();
-            return dialog;
+            return new PermissionNotGrantedDialog();
         }
 
         @NonNull
@@ -146,16 +135,12 @@ public class MainActivity extends AppCompatActivity {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("GPS is needed for tracking your runs")
-                    .setPositiveButton("Enable GPS", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // user agreed to enable GPS
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_GPS_CODE);
-                        }
+                    .setPositiveButton("Enable GPS", (dialog, id) -> {
+                        // user agreed to enable GPS
+                        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_GPS_CODE);
                     })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // user decide to not enable GPS
-                        }
+                    .setNegativeButton("No", (dialog, id) -> {
+                        // user decide to not enable GPS
                     });
             // Create the AlertDialog object and return it
             return builder.create();
@@ -180,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
     //check if Location is permitted, or else disable record run button
     @Override
-    public void onRequestPermissionsResult(int reqCode, String[] permissions, int[] results) {
+    public void onRequestPermissionsResult(int reqCode, @NonNull String[] permissions, @NonNull int[] results) {
         super.onRequestPermissionsResult(reqCode, permissions, results);
         if (reqCode == PERMISSION_GPS_CODE) {
             if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {

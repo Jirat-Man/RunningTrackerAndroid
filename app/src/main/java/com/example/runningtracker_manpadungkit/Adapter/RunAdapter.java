@@ -67,13 +67,10 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
             super(itemView);
             widgetInit();
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if( position != RecyclerView.NO_POSITION && listener != null){
-                        listener.onRunClick(runEntities.get(position));
-                    }
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if( position != RecyclerView.NO_POSITION && listener != null){
+                    listener.onRunClick(runEntities.get(position));
                 }
             });
         }

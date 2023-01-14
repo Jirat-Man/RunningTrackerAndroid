@@ -7,35 +7,25 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SECONDS;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
-
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.view.View;
-import android.location.Location;
-
 import com.example.runningtracker_manpadungkit.Service.LocationService;
 import com.example.runningtracker_manpadungkit.databinding.ActivityRecordRunBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-
-
 import android.widget.Toast;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
-
 import com.example.runningtracker_manpadungkit.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 public class RecordRunActivity extends AppCompatActivity{
 
@@ -55,9 +45,6 @@ public class RecordRunActivity extends AppCompatActivity{
     String mAvgSpeed;
     int mSeconds = -1;
 
-    //Google's API for location service
-    private FusedLocationProviderClient fusedLocationClient;
-
     private Handler handler;
 
     private LocationService.MyLocalBinder service;
@@ -73,26 +60,18 @@ public class RecordRunActivity extends AppCompatActivity{
 
         checkLocationPermission();
 
-        mRecordRunBinding.stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopButtonDialogConfirmation();
+        mRecordRunBinding.stopButton.setOnClickListener(v -> stopButtonDialogConfirmation());
+        mRecordRunBinding.pauseButton.setOnClickListener(v -> {
+            onPause = !onPause;
+            if(onPause){
+                Toast.makeText(RecordRunActivity.this, "Tracking paused", Toast.LENGTH_SHORT).show();
+                mRecordRunBinding.pauseButton.setImageResource(R.drawable.play_button);
+                pauseTracking();
             }
-        });
-        mRecordRunBinding.pauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPause = !onPause;
-                if(onPause){
-                    Toast.makeText(RecordRunActivity.this, "Tracking paused", Toast.LENGTH_SHORT).show();
-                    mRecordRunBinding.pauseButton.setImageResource(R.drawable.play_button);
-                    pauseTracking();
-                }
-                else{
-                    Toast.makeText(RecordRunActivity.this, "Tracking resume", Toast.LENGTH_SHORT).show();
-                    mRecordRunBinding.pauseButton.setImageResource(R.drawable.pause_button);
-                    continueTracking();
-                }
+            else{
+                Toast.makeText(RecordRunActivity.this, "Tracking resume", Toast.LENGTH_SHORT).show();
+                mRecordRunBinding.pauseButton.setImageResource(R.drawable.pause_button);
+                continueTracking();
             }
         });
     }
@@ -100,17 +79,15 @@ public class RecordRunActivity extends AppCompatActivity{
 
 
     private void checkLocationPermission() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //Google's API for location service
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             //permission is granted
-            fusedLocationClient.getLastLocation().addOnSuccessListener(RecordRunActivity.this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    //permission granted and ready to use
-                    if(!isBound){
-                        serviceBind();
-                    }
+            fusedLocationClient.getLastLocation().addOnSuccessListener(RecordRunActivity.this, location -> {
+                //permission granted and ready to use
+                if(!isBound){
+                    serviceBind();
                 }
             });
         }
@@ -135,35 +112,29 @@ public class RecordRunActivity extends AppCompatActivity{
             handler = new Handler();
             isBound = true;
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (service != null) {
-                        if(mSeconds == 0){
-                            mStartTime = service.getDate();
-                        }
-                        mDistance = service.getDistance();
-                        mDuration = service.getDuration();
-                        mSpeed = service.getSpeed();
-                        mDate = service.getDate();
-                        mAltitude = service.getAltitude();
-                        mAvgSpeed = String.valueOf(service.getAvgSpeed());
-                        mSeconds++;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mRecordRunBinding.distance.setText(String.valueOf(mDistance));
-                                mRecordRunBinding.speed.setText(String.valueOf(mSpeed));
-                                mRecordRunBinding.duration.setText(String.valueOf(mDuration));
-                                mRecordRunBinding.altitude.setText(mAltitude);
-                                mRecordRunBinding.date.setText(mDate);
-                            }
-                        });
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+            new Thread(() -> {
+                while (service != null) {
+                    if(mSeconds == 0){
+                        mStartTime = service.getDate();
+                    }
+                    mDistance = service.getDistance();
+                    mDuration = service.getDuration();
+                    mSpeed = service.getSpeed();
+                    mDate = service.getDate();
+                    mAltitude = service.getAltitude();
+                    mAvgSpeed = String.valueOf(service.getAvgSpeed());
+                    mSeconds++;
+                    handler.post(() -> {
+                        mRecordRunBinding.distance.setText(String.valueOf(mDistance));
+                        mRecordRunBinding.speed.setText(String.valueOf(mSpeed));
+                        mRecordRunBinding.duration.setText(String.valueOf(mDuration));
+                        mRecordRunBinding.altitude.setText(mAltitude);
+                        mRecordRunBinding.date.setText(mDate);
+                    });
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }).start();
@@ -187,26 +158,22 @@ public class RecordRunActivity extends AppCompatActivity{
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.confirm_dialog_message)
                 .setTitle(R.string.confirm_dialog_title)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent();
-                        intent.putExtra(EXTRA_DURATION_FROM_RECORD, String.valueOf(mDistance));
-                        intent.putExtra(EXTRA_DURATION, mDuration);
-                        intent.putExtra(EXTRA_SPEED, mAvgSpeed);
-                        intent.putExtra(EXTRA_DATE, mStartTime);
-                        intent.putExtra(EXTRA_SECONDS, mSeconds);
-                        setResult(RUN_RESULT_CODE, intent);
-                        isBound = false;
-                        tracking = false;
-                        onPause = false;
-                        stopService(serviceIntent);
-                        RecordRunActivity.super.onBackPressed();
-                    }
+                .setPositiveButton(R.string.confirm, (dialog, id) -> {
+                    Intent intent = new Intent();
+                    intent.putExtra(EXTRA_DURATION_FROM_RECORD, String.valueOf(mDistance));
+                    intent.putExtra(EXTRA_DURATION, mDuration);
+                    intent.putExtra(EXTRA_SPEED, mAvgSpeed);
+                    intent.putExtra(EXTRA_DATE, mStartTime);
+                    intent.putExtra(EXTRA_SECONDS, mSeconds);
+                    setResult(RUN_RESULT_CODE, intent);
+                    isBound = false;
+                    tracking = false;
+                    onPause = false;
+                    stopService(serviceIntent);
+                    RecordRunActivity.super.onBackPressed();
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Do nothing if user cancels;
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                    // Do nothing if user cancels;
                 });
 
         // Create the AlertDialog object and return it

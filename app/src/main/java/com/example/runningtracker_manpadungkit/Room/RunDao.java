@@ -24,6 +24,11 @@ public interface RunDao {
 
     @Query("DELETE FROM run_record")
     void deleteAll();
+    @Query("SELECT SUM(run_distance) FROM run_record")
+    LiveData<Double> getSumOfDistance();
+
+    @Query("SELECT COUNT(run_id) FROM run_record")
+    LiveData<String> getNumOfRuns();
 
     @Query("SELECT * FROM run_record ORDER BY run_id DESC")
     LiveData<List<RunEntity>> getAllRuns();
@@ -36,5 +41,6 @@ public interface RunDao {
 
     @Query("SELECT * FROM run_record ORDER BY run_distance DESC")
     LiveData<List<RunEntity>> getAllRunsByDistance();
+
 
 }

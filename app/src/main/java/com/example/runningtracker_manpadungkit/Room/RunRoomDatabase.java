@@ -1,20 +1,14 @@
 package com.example.runningtracker_manpadungkit.Room;
-
 import android.content.Context;
-
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.annotation.NonNull;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {RunEntity.class}, version = 11, exportSchema = false)
-//@TypeConverters({BitmapStringConverter.class})// This will convert Bitmap to String and vice-versa
-
+@Database(entities = {RunEntity.class}, version = 12, exportSchema = false)
 public abstract class RunRoomDatabase extends RoomDatabase {
     private static RunRoomDatabase instance;
     public abstract RunDao runDao();
@@ -39,9 +33,4 @@ public abstract class RunRoomDatabase extends RoomDatabase {
             super.onCreate(db);
         }
     };
-
-
-
-
-
 }
