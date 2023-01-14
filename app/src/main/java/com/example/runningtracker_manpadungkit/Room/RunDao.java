@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
+//Holds different methods to extract various data from RoomDatabase
 @Dao
 public interface RunDao {
 
@@ -24,6 +25,7 @@ public interface RunDao {
 
     @Query("DELETE FROM run_record")
     void deleteAll();
+
     @Query("SELECT SUM(run_distance) FROM run_record")
     LiveData<Double> getSumOfDistance();
 

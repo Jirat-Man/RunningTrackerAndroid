@@ -15,11 +15,13 @@ import com.example.runningtracker_manpadungkit.Room.RunEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+//This class fills up the recyclerView with cardviews that has data from, the room database
 public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
 
     private List<RunEntity> runEntities = new ArrayList<>();
     private onRunClickListener listener;
-    
+
+    //inflate view holder with the cardviews
     @NonNull
     @Override
     public RunHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -28,6 +30,7 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
         return new RunHolder(itemView);
     }
 
+    //set the textview with the data from room database
     @Override
     public void onBindViewHolder(@NonNull RunHolder holder, int position) {
         RunEntity currentRun = runEntities.get(position);
@@ -39,22 +42,27 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
         holder.mRunDateView.setText(currentRun.getDate());
     }
 
+    //return number of runEntities
     @Override
     public int getItemCount() {
         return runEntities.size();
     }
 
+    //set the runEntity and notify database
     @SuppressLint("NotifyDataSetChanged")
-    public void setRunEntities(List<RunEntity> runEntities){
+    public void setRunEntities(List<RunEntity> runEntities) {
         this.runEntities = runEntities;
         notifyDataSetChanged();
     }
 
-    public RunEntity getRunAt(int position){
+    //return runEntity at a given position
+    public RunEntity getRunAt(int position) {
         return runEntities.get(position);
     }
 
-    class RunHolder extends RecyclerView.ViewHolder{
+
+    //Initialise the recycler view of cardviews
+    class RunHolder extends RecyclerView.ViewHolder {
 
         private TextView mRunDistanceView;
         private TextView mRunDurationView;
@@ -67,14 +75,16 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
             super(itemView);
             widgetInit();
 
+            //click listener for when users want to click on the card view and see run details
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if( position != RecyclerView.NO_POSITION && listener != null){
+                if (position != RecyclerView.NO_POSITION && listener != null) {
                     listener.onRunClick(runEntities.get(position));
                 }
             });
         }
 
+        //initialise all views
         private void widgetInit() {
             mRunDistanceView = itemView.findViewById(R.id.runDistance);
             mRunDurationView = itemView.findViewById(R.id.runDuration);
@@ -85,10 +95,11 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.RunHolder> {
         }
     }
 
-    public interface onRunClickListener{
+    public interface onRunClickListener {
         void onRunClick(RunEntity runEntity);
     }
-    public void setUpRunListener(onRunClickListener listener){
+
+    public void setUpRunListener(onRunClickListener listener) {
         this.listener = listener;
     }
 }

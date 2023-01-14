@@ -1,7 +1,9 @@
 package com.example.runningtracker_manpadungkit.Service;
+
 import static com.example.runningtracker_manpadungkit.Constants.CHANNEL_ID;
 import static com.example.runningtracker_manpadungkit.Constants.INTERVAL_MILLIS;
 import static com.example.runningtracker_manpadungkit.Constants.NOTIFICATION_ID;
+
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,10 +16,12 @@ import android.os.Binder;
 
 import android.os.IBinder;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
 import com.example.runningtracker_manpadungkit.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -25,6 +29,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -33,8 +38,10 @@ import java.util.TimerTask;
 
 public class LocationService extends Service {
 
+    //Service IBinder, to give info back to activity that requested the service
     private final IBinder binder = new MyLocalBinder();
 
+    //Different variable to return data of run
     double mDistance = 0;
     String mDuration;
     double mSpeed = 0;
@@ -45,7 +52,11 @@ public class LocationService extends Service {
     double mAvgSpeed = 0;
     int seconds = 0;
     int counter = 0;
+
+    //boolean for when user decides to pause
     static Boolean pauseTime = false;
+
+    //Timer
     Timer mTimer;
     TimerTask mTimerTask;
     double mTime = -1.0;
@@ -58,13 +69,14 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
 
-        startTimer();
+        startTimer();//starts timer
 
-        if(!pauseTime){
-            Notify();
+        if (!pauseTime) {
+            Notify();//if tracker is not paused, make a notification
         }
 
 
+        //Request for location, at the interval of 1 second
         LocationRequest locationRequest = new
                 LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_MILLIS).build();
 
@@ -83,7 +95,6 @@ public class LocationService extends Service {
                     //reset location for when tracking is paused
                     counter = 0;
                 }
-                Log.d("servicee", String.valueOf(mSpeed));
             }
         };
         //Google's API for location service
@@ -103,31 +114,29 @@ public class LocationService extends Service {
 
 
     private void setDate() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy , HH:mm:ss", Locale.ENGLISH);
-        mDate = dateFormat.format(calendar.getTime());
+        Calendar calendar = Calendar.getInstance();//get instance from calendar
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy , HH:mm:ss", Locale.ENGLISH); //get the format this way
+        mDate = dateFormat.format(calendar.getTime());//for the given string
     }
 
+    //set timer to get the duration of the run
     private void startTimer() {
         mTimer = new Timer();
-        mTimerTask = new TimerTask()
-        {
+        mTimerTask = new TimerTask() {
             @Override
-            public void run()
-            {
+            public void run() {
                 setDate();
-                if(!pauseTime) {
+                if (!pauseTime) {
                     mTime++;
                     mDuration = getTimerText();
                 }
             }
         };
-        mTimer.scheduleAtFixedRate(mTimerTask, 0 ,1000);
+        mTimer.scheduleAtFixedRate(mTimerTask, 0, 1000);//make increment run every second
     }
 
-
-    private String getTimerText()
-    {
+    //Format time into a String variable
+    private String getTimerText() {
         int rounded = (int) Math.round(mTime);
         int seconds = ((rounded % 86400) % 3600) % 60;
         int minutes = ((rounded % 86400) % 3600) / 60;
@@ -136,14 +145,12 @@ public class LocationService extends Service {
         return formatTime(seconds, minutes, hours);
     }
 
-    private String formatTime(int seconds, int minutes, int hours)
-    {
-        return String.format(Locale.ENGLISH,"%02d",hours) + " : " + String.format(Locale.ENGLISH,"%02d",minutes) + " : " + String.format(Locale.ENGLISH,"%02d",seconds);
+    private String formatTime(int seconds, int minutes, int hours) {
+        return String.format(Locale.ENGLISH, "%02d", hours) + " : " + String.format(Locale.ENGLISH, "%02d", minutes) + " : " + String.format(Locale.ENGLISH, "%02d", seconds);
     }
 
 
     private void updateData(Location location) {
-
         //Update all the textView with new location
         if (location != null) {
             mDistance = getDistance(location);
@@ -151,15 +158,15 @@ public class LocationService extends Service {
             mLatitude = location.getLatitude();
 
             //check if phone has altitude checker function
-            if(location.hasAltitude()){
+            if (location.hasAltitude()) {
                 mAltitude = location.getAltitude();
             }
             // if not put "-404"
-            else{
+            else {
                 mAltitude = -404;
             }
             //check if phone has speed checker function
-            if(location.hasSpeed()){
+            if (location.hasSpeed()) {
                 mSpeed = (double) Math.round(location.getSpeed() * 1d);
                 mAvgSpeed += (double) Math.round(location.getSpeed() * 1d);
                 seconds++;
@@ -168,7 +175,7 @@ public class LocationService extends Service {
                 Log.d("seconds", String.valueOf(seconds));
             }
             // if not put "404"
-            else{
+            else {
                 mAvgSpeed = -404;
             }
         }
@@ -177,7 +184,8 @@ public class LocationService extends Service {
     //Return the distance covered by using Longitude and Latitude using Haversine Formula
     private double getDistance(Location location) {
         counter++;
-        if(counter > 1){
+        //counter has to be more than 1 because the first iteration will add in the radius of the earth
+        if (counter > 1) {
             int EARTH_RADIUS = 6371; // Approx Earth radius in KM
 
             double dLat = Math.toRadians((location.getLatitude() - mLatitude));
@@ -191,14 +199,15 @@ public class LocationService extends Service {
 
             mDistance = mDistance + (EARTH_RADIUS * c);
         }
-        return (double)Math.round(mDistance * 100d) / 100d; // <-- d
+        return (double) Math.round(mDistance * 100d) / 100d; // <-- d
     }
 
     private double haversine(double val) {
         return Math.pow(Math.sin(val / 2), 2);
     }
 
-    protected void resetLocation(){
+    //reset all the variables for when users want to start a new run
+    protected void resetLocation() {
         mDistance = 0;
         mDuration = "00 : 00 : 00";
         mSpeed = 0;
@@ -212,18 +221,20 @@ public class LocationService extends Service {
         mLongitude = 0;
     }
 
-    public void pauseTracking(){
+    //Tracking status checker
+    public void pauseTracking() {
         pauseTime = true;
     }
-    public void continueTracking(){
+
+    public void continueTracking() {
         pauseTime = false;
     }
 
 
     @Override
     public void onDestroy() {
-        resetLocation();
-        deleteNotification(getApplicationContext(), NOTIFICATION_ID);
+        resetLocation();//reset lcoation
+        deleteNotification(getApplicationContext(), NOTIFICATION_ID);//delete notification
         super.onDestroy();
     }
 
@@ -238,7 +249,7 @@ public class LocationService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(NOTIFICATION_ID,builder.build());
+        managerCompat.notify(NOTIFICATION_ID, builder.build());
     }
 
     private void createNotificationChannel() {
@@ -257,22 +268,37 @@ public class LocationService extends Service {
 
     //return service to activity, bind service to activity
     public class MyLocalBinder extends Binder {
-        public double getDistance(){
+        public double getDistance() {
             return LocationService.this.mDistance;
         }
-        public String getDuration(){
+
+        public String getDuration() {
             return LocationService.this.mDuration;
         }
-        public double getSpeed(){
-            return (double)Math.round((mSpeed) * 100d)/100d;
+
+        public double getSpeed() {
+            return (double) Math.round((mSpeed) * 100d) / 100d;
         }
-        public double getAvgSpeed(){
-            return (double)Math.round((mAvgSpeed/seconds) * 100d)/100d;
+
+        public double getAvgSpeed() {
+            return (double) Math.round((mAvgSpeed / seconds) * 100d) / 100d;
         }
-        public String getDate(){return LocationService.this.mDate;}
-        public String getAltitude(){return String.valueOf(LocationService.this.mAltitude);}
-        public void pauseTracking(){LocationService.this.pauseTracking();}
-        public void continueTracking(){LocationService.this.continueTracking();}
+
+        public String getDate() {
+            return LocationService.this.mDate;
+        }
+
+        public String getAltitude() {
+            return String.valueOf(LocationService.this.mAltitude);
+        }
+
+        public void pauseTracking() {
+            LocationService.this.pauseTracking();
+        }
+
+        public void continueTracking() {
+            LocationService.this.continueTracking();
+        }
     }
 
 }

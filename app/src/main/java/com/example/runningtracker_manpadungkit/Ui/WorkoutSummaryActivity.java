@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -38,6 +39,7 @@ import java.io.FileNotFoundException;
 
 public class WorkoutSummaryActivity extends AppCompatActivity {
 
+    // all the run variable
     String mRunComment;
     float mNumberOfStars;
     String mDistance;
@@ -47,7 +49,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     int mSeconds;
     Uri uri;
     Bitmap bitmap;
-    byte[] imageByte;
+    byte[] imageByte;//store image uploaded from gallery
     int id;
 
     RunViewModel mRunViewModel;
@@ -55,19 +57,24 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     private ActivitySummaryBinding mSummaryBinding;
 
 
+    //handle activity result from gallery
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
             if (result != null && result.getResultCode() == IMAGE_PICKER_CODE && result.getData() != null) {
+                //get Image URI
                 uri = result.getData().getData();
+                //Turn URI into a bitMap
                 try {
                     bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(uri));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+                //set Image View as the bitmap
                 mSummaryBinding.imageView.setImageBitmap(bitmap);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+                //convert the bitmap into byte[] so it can be stored in the database
                 imageByte = stream.toByteArray();
             }
         }
@@ -76,14 +83,18 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //initialise activity
         mSummaryBinding = DataBindingUtil.setContentView(this, R.layout.activity_summary);
 
         //initialise ViewModel
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
 
+
+        //if intent is from AnalyticsActivity
+        // set all the Component of the activity with the data from the run that the user clicked
         if (getIntent().hasExtra(EXTRA_ID)) {
             id = getIntent().getIntExtra(EXTRA_ID, -1);
+            //set all the textview
             mSummaryBinding.runDistance.setText(String.valueOf(getIntent().getDoubleExtra(EXTRA_DISTANCE, 0)));
             mSummaryBinding.runDuration.setText(getIntent().getStringExtra(EXTRA_DURATION));
             mSummaryBinding.runDate.setText(getIntent().getStringExtra(EXTRA_DATE));
@@ -91,30 +102,35 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             mSummaryBinding.ratingBar.setRating(getIntent().getFloatExtra(EXTRA_RATING, 0));
             mSummaryBinding.editText.setText(getIntent().getStringExtra(EXTRA_COMMENT));
 
+            //set Image if there is one
             if (getIntent().getByteArrayExtra(EXTRA_IMAGE) != null) {
                 byte[] byteArray = getIntent().getByteArrayExtra(EXTRA_IMAGE);
                 Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
                 mSummaryBinding.imageView.setImageBitmap(compressedBitmap);
             }
 
+            //set the local variable with the data for when we update the runEntity
             imageByte = getIntent().getByteArrayExtra(EXTRA_IMAGE);
             mDistance = String.valueOf(getIntent().getDoubleExtra(EXTRA_DISTANCE, 0));
             mDuration = getIntent().getStringExtra(EXTRA_DURATION);
             mDate = getIntent().getStringExtra(EXTRA_DATE);
             mSpeed = String.valueOf(getIntent().getDoubleExtra(EXTRA_SPEED, 0));
-        } else if (getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)) {
+        }
+        //if intent was from MainActivity
+        else if (getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)) {
             getRunResult();
         }
 
+        // save the image for when the screen rotates
         if (savedInstanceState != null) {
             imageByte = savedInstanceState.getByteArray(SAVE_IMAGE_BYTE);
         }
         if (imageByte != null) {
-
             Bitmap compressedBitmap = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
             mSummaryBinding.imageView.setImageBitmap(compressedBitmap);
         }
 
+        //Upload button listener
         mSummaryBinding.uploadImageButton.setOnClickListener(v -> {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_DENIED) {
@@ -122,16 +138,21 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
                 String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
                 requestPermissions(permissions, IMAGE_PERMISSION_CODE);
             } else {
+                //go to gallery to pick image
                 getImage();
             }
         });
 
+        //Done Button listener
+        //Store/Update the data into the database
         mSummaryBinding.doneButton.setOnClickListener(v -> {
             storeRunData();
+            Toast.makeText(WorkoutSummaryActivity.this, "Run stored in History", Toast.LENGTH_SHORT).show();
             WorkoutSummaryActivity.super.onBackPressed();
         });
     }
 
+    //save image byte onSaveInstanceState
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -143,6 +164,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    //launch intent to Image folder to get Image
     private void getImage() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_PICK);
@@ -152,6 +174,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     }
 
 
+    //ask for permission for access to gallery
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -165,12 +188,16 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         }
     }
 
+    //Store run Data
     private void storeRunData() {
         getRunRating();
         getRunComment();
+        //if new run, insert data
         if (getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)) {
             storeInRoomDatabase();
-        } else if (getIntent().hasExtra(EXTRA_ID)) {
+        }
+        //if update run, update data
+        else if (getIntent().hasExtra(EXTRA_ID)) {
             updateRoomDatabase();
         }
     }
@@ -179,16 +206,25 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     private void getAvgSpeed() {
         double tempDist = Double.parseDouble(mDistance);
 
-        //distance is in km so have to *1000
-        double distance = tempDist * 1000;
-        double AvgSpeed = distance / mSeconds;
-        mSpeed = String.valueOf(Math.round(((1000 / AvgSpeed) / 60) * 100d) / 100d);
-        Toast.makeText(this, mSpeed, Toast.LENGTH_SHORT).show();
-        if (distance == 0) {
+        //split duration String by ":" to get hours, minutes, seconds
+        String[] split = mDuration.split(" : ");
+        double hours = Double.parseDouble(split[0]) * 60;
+        double minutes = Double.parseDouble(split[1]);
+        double seconds = Double.parseDouble(split[2]) / 60;
+
+        //add all the time in minutes together
+        double totalMinutes = hours + minutes + seconds;
+
+        //divide the total minutes of run by the total distance to get Min/Km
+        double AvgSpeed = totalMinutes/tempDist;
+
+        mSpeed = String.valueOf(Math.round(((AvgSpeed) * 100d)) / 100d);
+
+        //if Distance is 0 or less than 0, make the Average speed 0
+        if (tempDist <= 0) {
             mSpeed = String.valueOf(0);
         }
     }
-
 
     //Handle the event where users click black button instead of "done"
     //save and store all the data inside the room database
@@ -201,6 +237,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     private void updateRoomDatabase() {
         RunEntity run = new RunEntity(mDuration, Double.parseDouble(mDistance),
                 Double.parseDouble(mSpeed), mDate, mNumberOfStars, mRunComment, imageByte);
+        //set id of run so that it knows which runEntity to update
         run.setId(id);
         mRunViewModel.Update(run);
     }
@@ -212,14 +249,17 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     }
 
     private void getRunComment() {
+        //get edittext content
         mRunComment = String.valueOf(mSummaryBinding.editText.getText());
     }
 
     private void getRunRating() {
+        //get Rating bar content
         mNumberOfStars = mSummaryBinding.ratingBar.getRating();
     }
 
     private void getRunResult() {
+        //extract all the run data from the record activity
         Intent intent = getIntent();
         mDistance = intent.getStringExtra(EXTRA_DURATION_FROM_RECORD);
         mDuration = intent.getStringExtra(EXTRA_DURATION);

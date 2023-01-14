@@ -33,6 +33,7 @@ public class RecordRunActivity extends AppCompatActivity{
     Intent serviceIntent;
     //Boolean to check if there is any service binded to the activity
     boolean isBound = false;
+    //Boolean to check if tracking is paused
     static boolean onPause = false;
 
     //Various variables related to the run
@@ -45,22 +46,31 @@ public class RecordRunActivity extends AppCompatActivity{
     String mAvgSpeed;
     int mSeconds = -1;
 
+    //handler to change UI views using Service data
     private Handler handler;
 
+    // ServiceBinder
     private LocationService.MyLocalBinder mLocalBinder;
 
+    //Data Binding Object
     private ActivityRecordRunBinding mRecordRunBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //initialise activity
         mRecordRunBinding = DataBindingUtil.setContentView(this, R.layout.activity_record_run);
 
-        widgetInit();
+        //handle the image so that users know whether tracking is paused or live
+        handlePausePlayImage();
 
+        //check location permission, if granted bind to service
         checkLocationPermission();
 
+        //StopButton listener, launch confirmation dialog
         mRecordRunBinding.stopButton.setOnClickListener(v -> stopButtonDialogConfirmation());
+
+        //PauseButton, pause tracking and change button image
         mRecordRunBinding.pauseButton.setOnClickListener(v -> {
             onPause = !onPause;
             tracking = !tracking;
@@ -87,7 +97,9 @@ public class RecordRunActivity extends AppCompatActivity{
             fusedLocationClient.getLastLocation().addOnSuccessListener(RecordRunActivity.this, location -> {
                 //permission granted and ready to use
                 if(tracking){
+                    //bind to service
                     serviceBind();
+                    //flip tracking boolean
                     tracking = !tracking;
                 }
             });
@@ -100,12 +112,15 @@ public class RecordRunActivity extends AppCompatActivity{
         }
     }
 
+    //bind to service
     private void serviceBind() {
         serviceIntent = new Intent(RecordRunActivity.this, LocationService.class);
+        //Start service so that service persist even after activity is destroy
         startService(serviceIntent);
         bindService(serviceIntent, serviceConnection, BIND_AUTO_CREATE);
     }
 
+    //Service connection
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
@@ -125,6 +140,7 @@ public class RecordRunActivity extends AppCompatActivity{
                     mAltitude = mLocalBinder.getAltitude();
                     mAvgSpeed = String.valueOf(mLocalBinder.getAvgSpeed());
                     mSeconds++;
+                    //Update the UI of activity with the location data from the service
                     handler.post(() -> {
                         mRecordRunBinding.distance.setText(String.valueOf(mDistance));
                         mRecordRunBinding.speed.setText(String.valueOf(mSpeed));
@@ -147,15 +163,20 @@ public class RecordRunActivity extends AppCompatActivity{
         }
     };
 
+    //pause activities going on in the service
     private void pauseTracking() {
         mLocalBinder.pauseTracking();
     }
 
+    //resume activities in the service
     private void continueTracking() {
         mLocalBinder.continueTracking();
     }
 
     //brings up a dialog asking for confirmation from the user that they want to stop the run
+    //Once confirm, sends users back to MainActivity with the data
+    //From Main Activity, immediately launch workoutSummary with the attached data.
+    //Unbind from Service as well
     private void stopButtonDialogConfirmation() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.confirm_dialog_message)
@@ -192,7 +213,8 @@ public class RecordRunActivity extends AppCompatActivity{
         super.onDestroy();
     }
 
-    private void widgetInit() {
+    //handle image on button
+    private void handlePausePlayImage() {
         if(onPause){
             mRecordRunBinding.pauseButton.setImageResource(R.drawable.play_button);
         }

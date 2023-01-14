@@ -37,30 +37,37 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    //different variable to store run data
     String mDistance;
     String mDuration;
     String mSpeed;
     String mDate;
     int mSeconds;
+
+    //boolean to check if tracking is live
     public static Boolean tracking = false;
 
+    //data binding object
     private ActivityMainBinding mMainBinding;
 
+    //Handle activity result from RecordRunActivity
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
-
             if (result != null && result.getResultCode() == RUN_RESULT_CODE) {
                 // launch the summary activity
                 Intent resultIntent = result.getData();
 
+                //Launch WorkOutSummaryActivity with the data got from the run
                 if (resultIntent != null) {
+                    //get data from RecordRun
                     mDistance = resultIntent.getStringExtra(EXTRA_DURATION_FROM_RECORD);
                     mDuration = resultIntent.getStringExtra(EXTRA_DURATION);
                     mSpeed = resultIntent.getStringExtra(EXTRA_SPEED);
                     mDate = resultIntent.getStringExtra(EXTRA_DATE);
                     mSeconds = resultIntent.getIntExtra(EXTRA_SECONDS, 0);
 
+                    //send data to workoutSummary
                     Intent intent = new Intent(MainActivity.this, WorkoutSummaryActivity.class);
                     intent.putExtra(EXTRA_DURATION_FROM_RECORD, mDistance);
                     intent.putExtra(EXTRA_DURATION, mDuration);
@@ -70,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-            //set gif and text visibility
+            //handle gif and text visibility
             handleViewVisibility();
         }
     });
