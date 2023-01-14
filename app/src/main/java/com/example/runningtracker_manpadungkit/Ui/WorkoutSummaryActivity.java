@@ -104,10 +104,10 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
         if(getIntent().hasExtra(EXTRA_ID)){
             id = getIntent().getIntExtra(EXTRA_ID, -1);
-            mSummaryBinding.runDistance.setText(getIntent().getStringExtra(EXTRA_DISTANCE));
+            mSummaryBinding.runDistance.setText(String.valueOf(getIntent().getDoubleExtra(EXTRA_DISTANCE, 0)));
             mSummaryBinding.runDuration.setText(getIntent().getStringExtra(EXTRA_DURATION));
             mSummaryBinding.runDate.setText(getIntent().getStringExtra(EXTRA_DATE));
-            mSummaryBinding.runSpeed.setText(getIntent().getStringExtra(EXTRA_SPEED));
+            mSummaryBinding.runSpeed.setText(String.valueOf(getIntent().getDoubleExtra(EXTRA_SPEED, 0)));
             mSummaryBinding.ratingBar.setRating(getIntent().getFloatExtra(EXTRA_RATING, 0));
             mSummaryBinding.editText.setText(getIntent().getStringExtra(EXTRA_COMMENT));
 
@@ -118,10 +118,10 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
             }
 
             imageByte = getIntent().getByteArrayExtra(EXTRA_IMAGE);
-            mDistance = getIntent().getStringExtra(EXTRA_DISTANCE) ;
+            mDistance = String.valueOf(getIntent().getDoubleExtra(EXTRA_DISTANCE, 0));
             mDuration = getIntent().getStringExtra(EXTRA_DURATION);
             mDate = getIntent().getStringExtra(EXTRA_DATE);
-            mSpeed = getIntent().getStringExtra(EXTRA_SPEED);
+            mSpeed = String.valueOf(getIntent().getDoubleExtra(EXTRA_SPEED, 0));
         }
         else if(getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)){
             getRunResult();
@@ -230,14 +230,14 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     }
 
     private void updateRoomDatabase() {
-        RunEntity run = new RunEntity(mDuration, mDistance,
-                mSpeed,mDate, mNumberOfStars, mRunComment, imageByte);
+        RunEntity run = new RunEntity(mDuration, Double.parseDouble(mDistance),
+                Double.parseDouble(mSpeed),mDate, mNumberOfStars, mRunComment, imageByte);
         run.setId(id);
         mRunViewModel.Update(run);
     }
     private void storeInRoomDatabase() {
-        RunEntity run = new RunEntity(mDuration, mDistance,
-                mSpeed,mDate, mNumberOfStars, mRunComment, imageByte);
+        RunEntity run = new RunEntity(mDuration, Double.parseDouble(mDistance),
+                Double.parseDouble(mSpeed),mDate, mNumberOfStars, mRunComment, imageByte);
         mRunViewModel.Insert(run);
     }
 

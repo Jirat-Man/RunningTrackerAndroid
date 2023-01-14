@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 import 	android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.runningtracker_manpadungkit.Room.RunDao;
 import com.example.runningtracker_manpadungkit.Room.RunEntity;
@@ -19,7 +20,6 @@ public class RunRepository {
     public RunRepository(Application application) {
         RunRoomDatabase db = RunRoomDatabase.getInstance(application);
         mRunDao = db.runDao();
-        mAllRun = mRunDao.getAllRuns();
     }
 
     public void Insert(RunEntity runEntity) {
@@ -39,6 +39,23 @@ public class RunRepository {
         });
     }
     public LiveData<List<RunEntity>> GetAllRuns() {
+        Log.d("repository", "GetAllRuns ");
+        mAllRun = mRunDao.getAllRuns();
+        return mAllRun;
+    }
+    public LiveData<List<RunEntity>> GetAllRunsByRating() {
+        Log.d("repository", "GetAllRunsByRating: ");
+        mAllRun = mRunDao.getAllRunsByRating();
+        return mAllRun;
+    }
+    public LiveData<List<RunEntity>> GetAllRunsByDistance() {
+        Log.d("repository", "GetAllRunsByDistance: ");
+        mAllRun = mRunDao.getAllRunsByDistance();
+        return mAllRun;
+    }
+    public LiveData<List<RunEntity>> GetAllRunsBySpeed() {
+        Log.d("repository", "GetAllRunsBySpeed: ");
+        mAllRun = mRunDao.getAllRunsBySpeed();
         return mAllRun;
     }
 

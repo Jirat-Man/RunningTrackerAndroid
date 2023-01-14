@@ -27,4 +27,14 @@ public interface RunDao {
 
     @Query("SELECT * FROM run_record ORDER BY run_id DESC")
     LiveData<List<RunEntity>> getAllRuns();
+
+    @Query("SELECT * FROM run_record ORDER BY rating DESC")
+    LiveData<List<RunEntity>> getAllRunsByRating();
+
+    @Query("SELECT * FROM run_record ORDER BY speed ASC")
+    LiveData<List<RunEntity>> getAllRunsBySpeed();
+
+    @Query("SELECT * FROM run_record ORDER BY run_distance DESC")
+    LiveData<List<RunEntity>> getAllRunsByDistance();
+
 }

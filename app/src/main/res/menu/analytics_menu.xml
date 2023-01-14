@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sortDistance"
+        android:title="@string/sort_run_by_distance" />
+    <item
+        android:id="@+id/sortSpeed"
+        android:title="@string/sort_run_by_speed" />
+    <item
+        android:id="@+id/sortRating"
+        android:title="@string/sort_run_by_rating" />
+    <item
+        android:id="@+id/sortDate"
+        android:title="@string/sort_by_date" />
+    <item
+        android:id="@+id/getFunFact"
+        android:title="@string/your_running_fun_facts" />
     <item
         android:id="@+id/deleteAllRun"
-        android:title="@string/delete_all_run_history"
-        />
+        android:title="@string/delete_all_run_history" />
 
 </menu>

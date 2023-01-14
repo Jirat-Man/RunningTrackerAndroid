@@ -27,6 +27,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,28 +43,28 @@ import java.util.List;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
+
     public static RunViewModel mRunViewModel;
     private ActivityAnalyticsBinding mAnalyticsBinding;
+    RunAdapter adapter;
 
     //handle result from updating information in run history
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-            }
-        });
-
         @Override
+        public void onActivityResult(ActivityResult result) {
+        }
+    });
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mAnalyticsBinding = DataBindingUtil.setContentView(this, R.layout.activity_analytics);
 
         this.setTitle("Run History");
 
         mAnalyticsBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAnalyticsBinding.recyclerView.setHasFixedSize(true);
-
-        RunAdapter adapter = new RunAdapter();
+        adapter = new RunAdapter();
         mAnalyticsBinding.recyclerView.setAdapter(adapter);
 
 
@@ -77,7 +78,7 @@ public class AnalyticsActivity extends AppCompatActivity {
         });
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT ) {
+                ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -132,14 +133,73 @@ public class AnalyticsActivity extends AppCompatActivity {
 
     @SuppressLint("NonConstantResourceId")
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.deleteAllRun:
-                mRunViewModel.DeleteAll();
-                Toast.makeText(this, "Run history deleted", Toast.LENGTH_SHORT).show();
-                return true;
+                AlertDialog.Builder builder = new AlertDialog.Builder(AnalyticsActivity.this);
+                builder.setMessage(R.string.confirm_delete_all_run)
+                        .setTitle(R.string.delete_all_run)
+                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                mRunViewModel.DeleteAll();
+                                Toast.makeText(AnalyticsActivity.this, "Run history deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //do nothing
+                            }
+                        });
 
+                // Create the AlertDialog object and return it
+                builder.create().show();
+                return true;
+            case R.id.sortDistance:
+                Log.d("analytics", "distance ");
+                mRunViewModel.getAllRunsByDistance().observe(this, new Observer<List<RunEntity>>() {
+                    @Override
+                    public void onChanged(List<RunEntity> runEntities) {
+                        adapter.setRunEntities(runEntities);
+                    }
+                });
+                return true;
+            case R.id.sortRating:
+                Log.d("analytics", "rating ");
+                mRunViewModel.getAllRunsByRating().observe(this, new Observer<List<RunEntity>>() {
+                    @Override
+                    public void onChanged(List<RunEntity> runEntities) {
+                        adapter.setRunEntities(runEntities);
+                    }
+                });
+                return true;
+            case R.id.sortSpeed:
+                Log.d("analytics", "speed ");
+                mRunViewModel.getAllRunsBySpeed().observe(this, new Observer<List<RunEntity>>() {
+                    @Override
+                    public void onChanged(List<RunEntity> runEntities) {
+                        adapter.setRunEntities(runEntities);
+                    }
+                });
+                return true;
+            case R.id.sortDate:
+                Log.d("analytics", "date ");
+                mRunViewModel.getAllRuns().observe(this, new Observer<List<RunEntity>>() {
+                    @Override
+                    public void onChanged(List<RunEntity> runEntities) {
+                        adapter.setRunEntities(runEntities);
+                    }
+                });
+                return true;
+            case R.id.getFunFact:
+                return true;
             default:
+                Log.d("analytics", "default ");
+                mRunViewModel.getAllRuns().observe(this, new Observer<List<RunEntity>>() {
+                    @Override
+                    public void onChanged(List<RunEntity> runEntities) {
+                        adapter.setRunEntities(runEntities);
+                    }
+                });
                 return super.onOptionsItemSelected(item);
         }
     }
