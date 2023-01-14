@@ -21,6 +21,8 @@ import com.example.runningtracker_manpadungkit.Service.LocationService;
 import com.example.runningtracker_manpadungkit.databinding.ActivityRecordRunBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+
+import android.util.Log;
 import android.widget.Toast;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -73,7 +75,6 @@ public class RecordRunActivity extends AppCompatActivity{
         //PauseButton, pause tracking and change button image
         mRecordRunBinding.pauseButton.setOnClickListener(v -> {
             onPause = !onPause;
-            tracking = !tracking;
             if(onPause){
                 Toast.makeText(RecordRunActivity.this, "Tracking paused", Toast.LENGTH_SHORT).show();
                 mRecordRunBinding.pauseButton.setImageResource(R.drawable.play_button);
@@ -96,12 +97,9 @@ public class RecordRunActivity extends AppCompatActivity{
             //permission is granted
             fusedLocationClient.getLastLocation().addOnSuccessListener(RecordRunActivity.this, location -> {
                 //permission granted and ready to use
-                if(tracking){
-                    //bind to service
-                    serviceBind();
-                    //flip tracking boolean
-                    tracking = !tracking;
-                }
+                //bind to service
+                serviceBind();
+                tracking = true;
             });
         }
         else{
@@ -124,6 +122,7 @@ public class RecordRunActivity extends AppCompatActivity{
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
+            Log.d("rotatingg", "Connected");
             mLocalBinder = (LocationService.MyLocalBinder) binder;
             handler = new Handler();
             isBound = true;
@@ -159,7 +158,7 @@ public class RecordRunActivity extends AppCompatActivity{
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mLocalBinder = null;
+            isBound = false;
         }
     };
 
@@ -209,7 +208,6 @@ public class RecordRunActivity extends AppCompatActivity{
 
     @Override
     protected void onDestroy() {
-        isBound = false;
         super.onDestroy();
     }
 

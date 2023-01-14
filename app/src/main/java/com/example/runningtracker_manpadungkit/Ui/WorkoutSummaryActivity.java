@@ -147,7 +147,6 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         //Store/Update the data into the database
         mSummaryBinding.doneButton.setOnClickListener(v -> {
             storeRunData();
-            Toast.makeText(WorkoutSummaryActivity.this, "Run stored in History", Toast.LENGTH_SHORT).show();
             WorkoutSummaryActivity.super.onBackPressed();
         });
     }
@@ -194,10 +193,12 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         getRunComment();
         //if new run, insert data
         if (getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)) {
+            Toast.makeText(WorkoutSummaryActivity.this, "Run stored in History", Toast.LENGTH_SHORT).show();
             storeInRoomDatabase();
         }
         //if update run, update data
         else if (getIntent().hasExtra(EXTRA_ID)) {
+            Toast.makeText(WorkoutSummaryActivity.this, "Run Updated", Toast.LENGTH_SHORT).show();
             updateRoomDatabase();
         }
     }

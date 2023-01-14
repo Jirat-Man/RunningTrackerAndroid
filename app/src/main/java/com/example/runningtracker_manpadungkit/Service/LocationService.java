@@ -230,14 +230,12 @@ public class LocationService extends Service {
         pauseTime = false;
     }
 
-
     @Override
     public void onDestroy() {
         resetLocation();//reset lcoation
         deleteNotification(getApplicationContext(), NOTIFICATION_ID);//delete notification
         super.onDestroy();
     }
-
 
     //create notification channel
     private void Notify() {
