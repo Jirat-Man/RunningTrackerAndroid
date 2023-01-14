@@ -13,9 +13,11 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import android.Manifest;
@@ -28,25 +30,13 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.example.runningtracker_manpadungkit.R;
-import com.example.runningtracker_manpadungkit.RunViewModel;
+import com.example.runningtracker_manpadungkit.databinding.ActivityMainBinding;
 
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    private RunViewModel mRunViewModel;
-    ImageButton mRecordRunButton;
-    ImageButton mAnalyticsButton;
-    WebView mGifTracking;
-    TextView mPressToStartTextView;
-    TextView mInProgressTextview;
-    TextView mOnPauseTextView;
 
     String mDistance;
     String mDuration;
@@ -54,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     String mDate;
     int mSeconds;
     public static Boolean tracking = false;
+
+    private ActivityMainBinding mMainBinding;
 
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -88,35 +80,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
-        mRecordRunButton = findViewById(R.id.RecordRun);
-        mAnalyticsButton = findViewById(R.id.analyse);
-        mGifTracking = findViewById(R.id.gifTracking);
-        mPressToStartTextView = findViewById(R.id.pressToStart);
-        mInProgressTextview = findViewById(R.id.trackingInProgress);
-        mOnPauseTextView = findViewById(R.id.trackingOnPause);
+        mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        mGifTracking.getSettings().setJavaScriptEnabled(true);
-        mGifTracking.setWebViewClient(new WebViewClient());
+        mMainBinding.RecordRunButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent journey = new Intent(MainActivity.this, RecordRunActivity.class);
+                startForResult.launch(journey);
+                tracking = true;
+            }
+        });
+        mMainBinding.analyseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent journey = new Intent(MainActivity.this, AnalyticsActivity.class);
+                startActivity(journey);
+            }
+        });
+
+        mMainBinding.gifTracking.getSettings().setJavaScriptEnabled(true);
+        mMainBinding.gifTracking.setWebViewClient(new WebViewClient());
         String file = "file:android_asset/gif_tracking.gif";
-        //url of gif
-        mGifTracking.loadUrl(file);
+        mMainBinding.gifTracking.loadUrl(file);
 
         handleViewVisibility();
-
-        //mRecordRunButton button listener
-        mRecordRunButton.setOnClickListener(view -> {
-            Intent journey = new Intent(MainActivity.this, RecordRunActivity.class);
-            startForResult.launch(journey);
-            tracking = true;
-        });
-
-        mAnalyticsButton.setOnClickListener(view -> {
-            Intent journey = new Intent(MainActivity.this, AnalyticsActivity.class);
-            startActivity(journey);
-        });
-
         askForLocationPermission();
 
     }
@@ -124,27 +113,24 @@ public class MainActivity extends AppCompatActivity {
     private void handleViewVisibility() {
         if(onPause && tracking){
             //Tracking Paused
-            mGifTracking.setVisibility(View.VISIBLE);
-            mPressToStartTextView.setVisibility(View.INVISIBLE);
-            mInProgressTextview.setVisibility(View.INVISIBLE);
-            mOnPauseTextView.setVisibility(View.VISIBLE);
-            Log.d("EEEE", "1");
+            mMainBinding.gifTracking.setVisibility(View.VISIBLE);
+            mMainBinding.pressToStart.setVisibility(View.INVISIBLE);
+            mMainBinding.trackingInProgress.setVisibility(View.INVISIBLE);
+            mMainBinding.trackingOnPause.setVisibility(View.VISIBLE);
         }
         if(tracking && !onPause){
             //Tracking is in progress
-            mGifTracking.setVisibility(View.VISIBLE);
-            mPressToStartTextView.setVisibility(View.INVISIBLE);
-            mInProgressTextview.setVisibility(View.VISIBLE);
-            mOnPauseTextView.setVisibility(View.INVISIBLE);
-            Log.d("EEEE", "2");
+            mMainBinding.gifTracking.setVisibility(View.VISIBLE);
+            mMainBinding.pressToStart.setVisibility(View.INVISIBLE);
+            mMainBinding.trackingInProgress.setVisibility(View.VISIBLE);
+            mMainBinding.trackingOnPause.setVisibility(View.INVISIBLE);
         }
         if(!tracking && !onPause){
             //No tracking started
-            mGifTracking.setVisibility(View.INVISIBLE);
-            mPressToStartTextView.setVisibility(View.VISIBLE);
-            mInProgressTextview.setVisibility(View.INVISIBLE);
-            mOnPauseTextView.setVisibility(View.INVISIBLE);
-            Log.d("EEEE", "3");
+            mMainBinding.gifTracking.setVisibility(View.INVISIBLE);
+            mMainBinding.pressToStart.setVisibility(View.VISIBLE);
+            mMainBinding.trackingInProgress.setVisibility(View.INVISIBLE);
+            mMainBinding.trackingOnPause.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -154,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             return dialog;
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -195,18 +182,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int reqCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(reqCode, permissions, results);
-        switch (reqCode) {
-            case PERMISSION_GPS_CODE:
-                if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted
-                    mRecordRunButton.setEnabled(true);
-                }
-                else {
-                    // permission denied, disable GPS tracking buttons
-                    Toast.makeText(this, "Enable GPS in settings before you can proceed", Toast.LENGTH_SHORT).show();
-                }
-                return;
-
+        if (reqCode == PERMISSION_GPS_CODE) {
+            if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission granted
+                mMainBinding.RecordRunButton.setEnabled(true);
+            } else {
+                // permission denied, disable GPS tracking buttons
+                Toast.makeText(this, "Enable GPS in settings before you can proceed", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,11 +43,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.runningtracker_manpadungkit.R;
 import com.example.runningtracker_manpadungkit.Room.RunEntity;
 import com.example.runningtracker_manpadungkit.RunViewModel;
+import com.example.runningtracker_manpadungkit.databinding.ActivitySummaryBinding;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -54,20 +57,8 @@ import java.io.IOException;
 
 public class WorkoutSummaryActivity extends AppCompatActivity {
 
-    Button mDoneButton;
-    Button mUploadButton;
-    TextView mDistanceTextView;
-    TextView mDurationTextView;
-    TextView mDateTextView;
-    TextView mSpeedTextView;
-    ImageView mImageView;
-
-    EditText mRunCommentEditText;
     String mRunComment;
-
-    RatingBar mRunRatingBar;
     float mNumberOfStars;
-
     String mDistance;
     String mDuration;
     String mDate;
@@ -80,19 +71,20 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
     RunViewModel mRunViewModel;
 
+    private ActivitySummaryBinding mSummaryBinding;
+
 
         ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if(result != null && result.getResultCode() == IMAGE_PICKER_CODE && result.getData() != null){
-                    //mImageView.setImageURI(result.getData().getData());
                     uri = result.getData().getData();
                     try {
                         bitmap = BitmapFactory.decodeStream(getApplicationContext().getContentResolver().openInputStream(uri));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    mImageView.setImageBitmap(bitmap);
+                    mSummaryBinding.imageView.setImageBitmap(bitmap);
 
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
@@ -104,31 +96,28 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_summary);
 
-
-        //initialise all Views
-        widgetInit();
+        mSummaryBinding = DataBindingUtil.setContentView(this, R.layout.activity_summary);
 
         //initialise ViewModel
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
 
         if(getIntent().hasExtra(EXTRA_ID)){
             id = getIntent().getIntExtra(EXTRA_ID, -1);
-            mDistanceTextView.setText(getIntent().getStringExtra(EXTRA_DISTANCE));
-            mDurationTextView.setText(getIntent().getStringExtra(EXTRA_DURATION));
-            mDateTextView.setText(getIntent().getStringExtra(EXTRA_DATE));
-            mSpeedTextView.setText(getIntent().getStringExtra(EXTRA_SPEED));
-            mRunRatingBar.setRating(getIntent().getFloatExtra(EXTRA_RATING, 0));
-            mRunCommentEditText.setText(getIntent().getStringExtra(EXTRA_COMMENT));
-            Toast.makeText(this, getIntent().getStringExtra(EXTRA_IMAGE), Toast.LENGTH_SHORT).show();
+            mSummaryBinding.runDistance.setText(getIntent().getStringExtra(EXTRA_DISTANCE));
+            mSummaryBinding.runDuration.setText(getIntent().getStringExtra(EXTRA_DURATION));
+            mSummaryBinding.runDate.setText(getIntent().getStringExtra(EXTRA_DATE));
+            mSummaryBinding.runSpeed.setText(getIntent().getStringExtra(EXTRA_SPEED));
+            mSummaryBinding.ratingBar.setRating(getIntent().getFloatExtra(EXTRA_RATING, 0));
+            mSummaryBinding.editText.setText(getIntent().getStringExtra(EXTRA_COMMENT));
 
             if(getIntent().getByteArrayExtra(EXTRA_IMAGE) != null){
                 byte[] byteArray = getIntent().getByteArrayExtra(EXTRA_IMAGE);
                 Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
-                mImageView.setImageBitmap(compressedBitmap);
+                mSummaryBinding.imageView.setImageBitmap(compressedBitmap);
+                Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
             }
-
+    
             imageByte = getIntent().getByteArrayExtra(EXTRA_IMAGE);
             mDistance = getIntent().getStringExtra(EXTRA_DISTANCE) ;
             mDuration = getIntent().getStringExtra(EXTRA_DURATION);
@@ -138,22 +127,33 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         else if(getIntent().hasExtra(EXTRA_DURATION_FROM_RECORD)){
             getRunResult();
         }
-        mUploadButton.setOnClickListener(view -> {
-            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_DENIED){
-                //No permission
-                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                requestPermissions(permissions, IMAGE_PERMISSION_CODE);
-            }
-            else{
-                getImage();
+
+        if(imageByte != null){
+            Bitmap compressedBitmap = BitmapFactory.decodeByteArray(imageByte,0,imageByte.length);
+            mSummaryBinding.imageView.setImageBitmap(compressedBitmap);
+        }
+
+        mSummaryBinding.uploadImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_DENIED){
+                    //No permission
+                    String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                    requestPermissions(permissions, IMAGE_PERMISSION_CODE);
+                }
+                else{
+                    getImage();
+                }
             }
         });
 
-        //mDoneButton button listener
-        mDoneButton.setOnClickListener(view -> {
-            storeRunData();
-            WorkoutSummaryActivity.super.onBackPressed();
+        mSummaryBinding.doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                storeRunData();
+                WorkoutSummaryActivity.super.onBackPressed();
+            }
         });
     }
 
@@ -215,8 +215,6 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         storeRunData();
     }
 
-
-
     private void updateRoomDatabase() {
         RunEntity run = new RunEntity(mDuration, mDistance,
                 mSpeed,mDate, mNumberOfStars, mRunComment, imageByte);
@@ -230,11 +228,11 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
     }
 
     private void getRunComment() {
-        mRunComment = String.valueOf(mRunCommentEditText.getText());
+        mRunComment = String.valueOf(mSummaryBinding.editText.getText());
     }
 
     private void getRunRating() {
-        mNumberOfStars = mRunRatingBar.getRating();
+        mNumberOfStars = mSummaryBinding.ratingBar.getRating();
     }
 
     private void getRunResult() {
@@ -245,24 +243,10 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
         mSpeed = intent.getStringExtra(EXTRA_SPEED);
         mSeconds = intent.getIntExtra(EXTRA_SECONDS, 0);
 
-        mDistanceTextView.setText(intent.getStringExtra(EXTRA_DURATION_FROM_RECORD));
-        mDurationTextView.setText(intent.getStringExtra(EXTRA_DURATION));
-        mDateTextView.setText(intent.getStringExtra(EXTRA_DATE));
+        mSummaryBinding.runDistance.setText(intent.getStringExtra(EXTRA_DURATION_FROM_RECORD));
+        mSummaryBinding.runDuration.setText(intent.getStringExtra(EXTRA_DURATION));
+        mSummaryBinding.runDate.setText(intent.getStringExtra(EXTRA_DATE));
         getAvgSpeed();
-        mSpeedTextView.setText(mSpeed);
+        mSummaryBinding.runSpeed.setText(mSpeed);
     }
-
-    private void widgetInit() {
-        mDoneButton = findViewById(R.id.doneButton);
-        mUploadButton = findViewById(R.id.uploadImageButton);
-        mDistanceTextView = findViewById(R.id.runDistance);
-        mDurationTextView = findViewById(R.id.runDuration);
-        mDateTextView = findViewById(R.id.runDate);
-        mSpeedTextView = findViewById(R.id.runSpeed);
-        mRunRatingBar = findViewById(R.id.ratingBar);
-        mRunCommentEditText = findViewById(R.id.editText);
-        mImageView = findViewById(R.id.imageView);
-    }
-
-
 }

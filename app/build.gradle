@@ -18,9 +18,13 @@ android {
     namespace 'com.example.runningtracker_manpadungkit'
     compileSdk 33
 
+    dataBinding{
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.example.runningtracker_manpadungkit"
-        minSdk 24
+        minSdk 29
         targetSdk 33
         versionCode 1
         versionName "1.0"

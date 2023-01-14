@@ -1,6 +1,5 @@
 package com.example.runningtracker_manpadungkit.Ui;
 
-import static com.example.runningtracker_manpadungkit.Constants.EDIT_RUN_REQUEST;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_COMMENT;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DISTANCE;
@@ -9,7 +8,6 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_ID;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_IMAGE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_RATING;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
-import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -18,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -28,7 +27,6 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,17 +36,17 @@ import com.example.runningtracker_manpadungkit.Adapter.RunAdapter;
 import com.example.runningtracker_manpadungkit.R;
 import com.example.runningtracker_manpadungkit.Room.RunEntity;
 import com.example.runningtracker_manpadungkit.RunViewModel;
+import com.example.runningtracker_manpadungkit.databinding.ActivityAnalyticsBinding;
 
 import java.util.List;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
     public static RunViewModel mRunViewModel;
-
+    private ActivityAnalyticsBinding mAnalyticsBinding;
 
     //handle result from updating information in run history
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-
             @Override
             public void onActivityResult(ActivityResult result) {
             }
@@ -57,16 +55,16 @@ public class AnalyticsActivity extends AppCompatActivity {
         @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_analytics);
+
+        mAnalyticsBinding = DataBindingUtil.setContentView(this, R.layout.activity_analytics);
 
         this.setTitle("Run History");
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
+        mAnalyticsBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAnalyticsBinding.recyclerView.setHasFixedSize(true);
 
         RunAdapter adapter = new RunAdapter();
-        recyclerView.setAdapter(adapter);
+        mAnalyticsBinding.recyclerView.setAdapter(adapter);
 
 
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
@@ -106,7 +104,7 @@ public class AnalyticsActivity extends AppCompatActivity {
                 // Create the AlertDialog object and return it
                 builder.create().show();
             }
-        }).attachToRecyclerView(recyclerView);
+        }).attachToRecyclerView(mAnalyticsBinding.recyclerView);
 
         adapter.setUpRunListener(new RunAdapter.onRunClickListener() {
             @Override

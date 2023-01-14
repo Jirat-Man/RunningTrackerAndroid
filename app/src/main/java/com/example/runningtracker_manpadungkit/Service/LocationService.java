@@ -37,6 +37,7 @@ import com.google.android.gms.location.Priority;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -155,7 +156,7 @@ public class LocationService extends Service {
 
     private String formatTime(int seconds, int minutes, int hours)
     {
-        return String.format("%02d",hours) + " : " + String.format("%02d",minutes) + " : " + String.format("%02d",seconds);
+        return String.format(Locale.ENGLISH,"%02d",hours) + " : " + String.format(Locale.ENGLISH,"%02d",minutes) + " : " + String.format(Locale.ENGLISH,"%02d",seconds);
     }
 
 

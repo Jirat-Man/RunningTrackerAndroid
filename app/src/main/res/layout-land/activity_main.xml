@@ -1,109 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".Ui.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/black"
+        tools:context=".Ui.MainActivity">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/analyse"
-                android:layout_width="80dp"
-                android:layout_height="76dp"
-                android:background="@color/black"
-                android:contentDescription="@string/analytics"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/graph_icon"
-                tools:ignore="DuplicateSpeakableTextCheck" />
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <WebView
-                android:id="@+id/gifTracking"
-                android:layout_width="117dp"
-                android:layout_height="116dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_weight="1" />
 
                 <ImageButton
-                    android:id="@+id/RecordRun"
-                    android:layout_width="354dp"
-                    android:layout_height="353dp"
-                    android:background="@drawable/circular_button"
-                    android:contentDescription="@string/record"
-                    android:cropToPadding="true"
-                    android:foreground="@drawable/running_man"
-                    android:scaleType="center"
-                    app:tint="@color/black"
-                    tools:ignore="DuplicateSpeakableTextCheck,ImageContrastCheck" />
+                    android:id="@+id/analyseButton"
+                    android:layout_width="80dp"
+                    android:layout_height="76dp"
+                    android:background="@color/black"
+                    android:contentDescription="@string/analytics"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/graph_icon"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/pressToStart"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:text="@string/press_to_start"
-                android:textAlignment="center"
-                android:textColor="@color/neonGreen"
-                android:textSize="16sp" />
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/trackingInProgress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:text="@string/tracking_in_progress"
-                android:textAlignment="center"
-                android:textColor="@color/neonGreen"
-                android:textSize="16sp" />
+                <WebView
+                    android:id="@+id/gifTracking"
+                    android:layout_width="117dp"
+                    android:layout_height="116dp" />
 
-            <TextView
-                android:id="@+id/trackingOnPause"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:text="@string/tracking_paused"
-                android:textAlignment="center"
-                android:textColor="@color/neonGreen"
-                android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-        </FrameLayout>
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-    </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/RecordRunButton"
+                        android:layout_width="354dp"
+                        android:layout_height="353dp"
+                        android:background="@drawable/circular_button"
+                        android:contentDescription="@string/record"
+                        android:cropToPadding="true"
+                        android:foreground="@drawable/running_man"
+                        android:scaleType="center"
+                        app:tint="@color/black"
+                        tools:ignore="DuplicateSpeakableTextCheck,ImageContrastCheck" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/pressToStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/press_to_start"
+                    android:textAlignment="center"
+                    android:textColor="@color/neonGreen"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/trackingInProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/tracking_in_progress"
+                    android:textAlignment="center"
+                    android:textColor="@color/neonGreen"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/trackingOnPause"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/tracking_paused"
+                    android:textAlignment="center"
+                    android:textColor="@color/neonGreen"
+                    android:textSize="16sp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
