@@ -15,7 +15,6 @@ import android.location.Location;
 import android.os.Binder;
 
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -170,9 +169,6 @@ public class LocationService extends Service {
                 mSpeed = (double) Math.round(location.getSpeed() * 1d);
                 mAvgSpeed += (double) Math.round(location.getSpeed() * 1d);
                 seconds++;
-                Log.d("speed", String.valueOf(mSpeed));
-                Log.d("avg", String.valueOf(mAvgSpeed));
-                Log.d("seconds", String.valueOf(seconds));
             }
             // if not put "404"
             else {

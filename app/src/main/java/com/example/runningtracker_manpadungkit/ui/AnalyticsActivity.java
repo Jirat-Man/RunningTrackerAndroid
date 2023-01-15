@@ -65,10 +65,16 @@ public class AnalyticsActivity extends AppCompatActivity {
         mRunViewModel = new ViewModelProvider(this).get(RunViewModel.class);
         //set all the card views to the runEntities in the database
         mRunViewModel.getAllRuns().observe(this, runEntities -> adapter.setRunEntities(runEntities));
-        //get total distance ran
-        mRunViewModel.getTotalDistance().observe(this, s -> mTotalDistance = Math.round(Double.parseDouble(String.valueOf(s))*100d)/100d);
+
         //get total number of runs
         mRunViewModel.getTotalNumOfRuns().observe(this, s -> mNumOfRuns = s);
+        //there has to be more than 0 runs in the database in order to not trigger an error
+            //get total distance ran
+        mRunViewModel.getTotalDistance().observe(this, s ->{
+            if(s != null){
+                mTotalDistance = Math.round(Double.parseDouble(String.valueOf(s))*100d)/100d;
+            }
+        });
 
         //Slide to delete item from the database
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
@@ -165,8 +171,23 @@ public class AnalyticsActivity extends AppCompatActivity {
                 return true;
                 //get fun fact of user's runs including total distance ran and number of runs
             case R.id.getFunFact:
-                mRunViewModel.getTotalDistance().observe(this, s -> mTotalDistance = Math.round(Double.parseDouble(String.valueOf(s))*100d)/100d);
-                mRunViewModel.getTotalNumOfRuns().observe(this, s -> mNumOfRuns = s);
+                mRunViewModel.getTotalNumOfRuns().observe(this, s -> {
+                    if(s != null){
+                        mNumOfRuns = s;
+                    }
+                    else{
+                        mNumOfRuns = "0";
+                    }
+                });
+                mRunViewModel.getTotalDistance().observe(this, d -> {
+                    if(d != null){
+                        mTotalDistance = Math.round(Double.parseDouble(String.valueOf(d))*100d)/100d;
+                    }
+                    else{
+                        mTotalDistance = 0;
+                    }
+                });
+
                 openDialog(mNumOfRuns, mTotalDistance);//show dialog
                 return true;
             default:
