@@ -53,7 +53,7 @@
 
                     <TextView
                         android:id="@+id/distance"
-                        android:layout_width="match_parent"
+                        android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:text="@string/speedInt"
                         android:textAlignment="center"
@@ -63,16 +63,17 @@
 
                     <TextView
                         android:id="@+id/distanceText"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/distanceText"
+                        android:textAlignment="center"
                         android:textColor="@color/neonGreen"
                         android:textSize="16sp"
                         android:textStyle="italic" />
                 </LinearLayout>
 
                 <Space
-                    android:layout_width="0dp"
+                    android:layout_width="10dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
 
@@ -83,7 +84,7 @@
 
                     <TextView
                         android:id="@+id/altitude"
-                        android:layout_width="match_parent"
+                        android:layout_width="123dp"
                         android:layout_height="wrap_content"
                         android:text="@string/speedInt"
                         android:textAlignment="center"
@@ -103,7 +104,7 @@
                 </LinearLayout>
 
                 <Space
-                    android:layout_width="0dp"
+                    android:layout_width="10dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
 
@@ -114,7 +115,7 @@
 
                     <TextView
                         android:id="@+id/speed"
-                        android:layout_width="match_parent"
+                        android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:text="@string/speedInt"
                         android:textAlignment="center"
@@ -124,9 +125,10 @@
 
                     <TextView
                         android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/speed"
+                        android:textAlignment="center"
                         android:textColor="@color/neonGreen"
                         android:textSize="16sp"
                         android:textStyle="italic" />
