@@ -5,8 +5,8 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.runningtracker_manpadungkit.Repository.RunRepository;
-import com.example.runningtracker_manpadungkit.Room.RunEntity;
+import com.example.runningtracker_manpadungkit.repository.RunRepository;
+import com.example.runningtracker_manpadungkit.room.RunEntity;
 
 import java.util.List;
 

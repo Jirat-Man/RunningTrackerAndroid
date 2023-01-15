@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.Ui;
+package com.example.runningtracker_manpadungkit.ui;
 
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_COMMENT;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
@@ -29,7 +29,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.runningtracker_manpadungkit.Adapter.RunAdapter;
+import com.example.runningtracker_manpadungkit.adapter.RunAdapter;
 import com.example.runningtracker_manpadungkit.R;
 import com.example.runningtracker_manpadungkit.RunViewModel;
 import com.example.runningtracker_manpadungkit.databinding.ActivityAnalyticsBinding;
@@ -44,7 +44,7 @@ public class AnalyticsActivity extends AppCompatActivity {
     RunAdapter adapter;
 
     //handle activity result from updating information in run history
-    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+    final ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
     });
 
     @Override

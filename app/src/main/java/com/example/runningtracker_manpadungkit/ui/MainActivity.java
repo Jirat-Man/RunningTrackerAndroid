@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.Ui;
+package com.example.runningtracker_manpadungkit.ui;
 
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
@@ -7,7 +7,7 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SECONDS;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.PERMISSION_GPS_CODE;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
-import static com.example.runningtracker_manpadungkit.Ui.RecordRunActivity.onPause;
+import static com.example.runningtracker_manpadungkit.ui.RecordRunActivity.onPause;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mMainBinding;
 
     //Handle activity result from RecordRunActivity
-    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+    final ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
             if (result != null && result.getResultCode() == RUN_RESULT_CODE) {

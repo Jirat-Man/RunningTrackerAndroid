@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">RunningTracker_Manpadungkit</string>
-    <string name="google_map_key">AIzaSyBW61Zj45D_QJGtwNPxrYEoPfin-nMtfW0</string>
     <string name="distance">Distance:</string>
     <string name="duration">Duration:</string>
     <string name="altitude">Altitude</string>
@@ -9,8 +8,6 @@
     <string name="not_available">Not Available</string>
     <string name="record">Press to start tracking</string>
     <string name="analytics">Analytics</string>
-    <string name="pause_tracking">pauseTracking</string>
-    <string name="stop_tracking">stopTracking</string>
     <string name="confirm_dialog_message">Click confirm to end your run</string>
     <string name="confirm_dialog_title">Stop running?</string>
     <string name="confirm">Confirm</string>
@@ -21,10 +18,8 @@
     <string name="comment">Comment: </string>
     <string name="no_comment">No Comment</string>
     <string name="km">\u0020km</string>
-    <string name="m_s">\u0020m/s</string>
     <string name="workout_summary">Workout Summary</string>
     <string name="upload_image">Upload Image</string>
-    <string name="browse_device">Browse Device</string>
     <string name="default_comment">Default Comment</string>
     <string name="comment_text">Comment</string>
     <string name="done">Done</string>
@@ -33,7 +28,7 @@
     <string name="distanceText">Distance(km)</string>
     <string name="start_time">Start Time:\u0020</string>
     <string name="average_speed">Average Speed:\u0020</string>
-    <string name="tracking_in_progress">Tracking in progress...</string>
+    <string name="tracking_in_progress">Tracking in progress…</string>
     <string name="press_to_start">Press to Start</string>
     <string name="delete_run">Delete run?</string>
     <string name="confirm_delete_run">Click confirm to delete your run</string>
@@ -41,12 +36,9 @@
     <string name="upload_image_text">Upload Image</string>
     <string name="tracking_paused">Tracking paused</string>
     <string name="min_km">min/km</string>
-    <string name="tracking_run_text">Tracking Run</string>
-    <string name="keep_running">Keep running, you got this!</string>
     <string name="delete_all_run">Delete all runs?</string>
     <string name="confirm_delete_all_run">Click confirm to delete all runs</string>
     <string name="sort_run_by_distance">Sort run by distance</string>
-    <string name="sort_run_by_duration">Sort run by duration</string>
     <string name="sort_run_by_speed">Sort run by speed</string>
     <string name="sort_run_by_rating">Sort run by rating</string>
     <string name="your_running_fun_facts">Your running fun facts</string>

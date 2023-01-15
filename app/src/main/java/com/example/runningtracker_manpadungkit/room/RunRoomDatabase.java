@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.Room;
+package com.example.runningtracker_manpadungkit.room;
 
 import android.content.Context;
 

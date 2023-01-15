@@ -2,7 +2,7 @@ package com.example.runningtracker_manpadungkit;
 
 //contains all the constants used through out the project
 public final class Constants {
-    public static int RUN_RESULT_CODE = 99;
+    public static final int RUN_RESULT_CODE = 99;
     public static final int INTERVAL_MILLIS = 1000;
     public static final int PERMISSION_GPS_CODE = 1;
 

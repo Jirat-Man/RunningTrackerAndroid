@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.Adapter;
+package com.example.runningtracker_manpadungkit.adapter;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.runningtracker_manpadungkit.R;
-import com.example.runningtracker_manpadungkit.Room.RunEntity;
+import com.example.runningtracker_manpadungkit.room.RunEntity;
 
 import java.util.ArrayList;
 import java.util.List;

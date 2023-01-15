@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.Repository;
+package com.example.runningtracker_manpadungkit.repository;
 
 import android.app.Application;
 
@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData;
 
 import android.os.AsyncTask;
 
-import com.example.runningtracker_manpadungkit.Room.RunDao;
-import com.example.runningtracker_manpadungkit.Room.RunEntity;
-import com.example.runningtracker_manpadungkit.Room.RunRoomDatabase;
+import com.example.runningtracker_manpadungkit.room.RunDao;
+import com.example.runningtracker_manpadungkit.room.RunEntity;
+import com.example.runningtracker_manpadungkit.room.RunRoomDatabase;
 
 
 import java.util.List;

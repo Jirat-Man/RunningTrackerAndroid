@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.Ui;
+package com.example.runningtracker_manpadungkit.ui;
 
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_COMMENT;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
@@ -30,7 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.runningtracker_manpadungkit.R;
-import com.example.runningtracker_manpadungkit.Room.RunEntity;
+import com.example.runningtracker_manpadungkit.room.RunEntity;
 import com.example.runningtracker_manpadungkit.RunViewModel;
 import com.example.runningtracker_manpadungkit.databinding.ActivitySummaryBinding;
 import java.io.ByteArrayOutputStream;
@@ -57,7 +57,7 @@ public class WorkoutSummaryActivity extends AppCompatActivity {
 
 
     //handle activity result from gallery
-    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+    final ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
             if (result != null && result.getResultCode() == IMAGE_PICKER_CODE && result.getData() != null) {

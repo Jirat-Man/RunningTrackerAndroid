@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.Service;
+package com.example.runningtracker_manpadungkit.service;
 
 import static com.example.runningtracker_manpadungkit.Constants.CHANNEL_ID;
 import static com.example.runningtracker_manpadungkit.Constants.INTERVAL_MILLIS;
@@ -232,7 +232,7 @@ public class LocationService extends Service {
 
     @Override
     public void onDestroy() {
-        resetLocation();//reset lcoation
+        resetLocation();//reset location
         deleteNotification(getApplicationContext(), NOTIFICATION_ID);//delete notification
         super.onDestroy();
     }

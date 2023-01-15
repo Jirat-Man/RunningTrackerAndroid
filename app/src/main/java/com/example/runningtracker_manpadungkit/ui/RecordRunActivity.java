@@ -1,4 +1,4 @@
-package com.example.runningtracker_manpadungkit.Ui;
+package com.example.runningtracker_manpadungkit.ui;
 
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DATE;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION;
@@ -6,7 +6,7 @@ import static com.example.runningtracker_manpadungkit.Constants.EXTRA_DURATION_F
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SECONDS;
 import static com.example.runningtracker_manpadungkit.Constants.EXTRA_SPEED;
 import static com.example.runningtracker_manpadungkit.Constants.RUN_RESULT_CODE;
-import static com.example.runningtracker_manpadungkit.Ui.MainActivity.tracking;
+import static com.example.runningtracker_manpadungkit.ui.MainActivity.tracking;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -17,12 +17,11 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import com.example.runningtracker_manpadungkit.Service.LocationService;
+import com.example.runningtracker_manpadungkit.service.LocationService;
 import com.example.runningtracker_manpadungkit.databinding.ActivityRecordRunBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
-import android.util.Log;
 import android.widget.Toast;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -33,7 +32,7 @@ public class RecordRunActivity extends AppCompatActivity{
 
     //Service intent for location service
     Intent serviceIntent;
-    //Boolean to check if there is any service binded to the activity
+    //Boolean to check if there is any service bound to the activity
     boolean isBound = false;
     //Boolean to check if tracking is paused
     static boolean onPause = false;
@@ -122,7 +121,6 @@ public class RecordRunActivity extends AppCompatActivity{
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            Log.d("rotatingg", "Connected");
             mLocalBinder = (LocationService.MyLocalBinder) binder;
             handler = new Handler();
             isBound = true;
@@ -204,11 +202,6 @@ public class RecordRunActivity extends AppCompatActivity{
 
         // Create the AlertDialog object and return it
         builder.create().show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     //handle image on button

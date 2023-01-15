@@ -22,20 +22,20 @@
         tools:targetApi="31">
 
         <service
-            android:name=".Service.LocationService"
+            android:name=".service.LocationService"
             android:enabled="true"
             android:exported="false"
             android:permission="TODO" />
 
         <activity
-            android:name=".Ui.WorkoutSummaryActivity"
+            android:name=".ui.WorkoutSummaryActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Ui.AnalyticsActivity"
+            android:name=".ui.AnalyticsActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
             <meta-data
@@ -43,17 +43,17 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Ui.RecordRunActivity"
+            android:name=".ui.RecordRunActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:parentActivityName=".Ui.MainActivity">
+            android:parentActivityName=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
